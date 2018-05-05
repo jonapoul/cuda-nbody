@@ -1,7 +1,7 @@
 #ifndef CUDANBODY_CONFIG_H
 #define CUDANBODY_CONFIG_H
 
-#define CNB_CUDA
+// #define CNB_CUDA
 #define CNB_DEBUG
 
 #ifdef CNB_DEBUG

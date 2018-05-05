@@ -33,3 +33,4 @@
 
 *.sublime-workspace
 bin/
+logs/

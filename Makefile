@@ -18,7 +18,7 @@ INC  = -I. \
 SRC := $(wildcard $(SRCDIR)/*.cpp)
 OBJ := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRC))
 
-EXEC = percolation
+EXEC = cuda_nbody
 
 default: dir $(EXEC)
 
