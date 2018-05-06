@@ -1,10 +1,9 @@
-#ifndef CUDANBODY_DEBUG_H
-#define CUDANBODY_DEBUG_H
+#ifndef CUDANBODY_DEBUGSTREAM_H
+#define CUDANBODY_DEBUGSTREAM_H
 
 #include <streambuf>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 namespace cuda_nbody {
 
@@ -17,19 +16,11 @@ public:
 
 private:
    struct DebugBuffer : public std::streambuf {
-      void AddBuffer(std::streambuf* buf) {
-         bufs.push_back(buf);
-      }
-      virtual int overflow(int c) {
-         std::for_each(bufs.begin(),
-                       bufs.end(),
-                       std::bind2nd(std::mem_fun(&std::streambuf::sputc),c));
-         return c;
-      }
-   private:
+      void AddBuffer(std::streambuf* buf);
+      virtual int overflow(int c);
       std::vector<std::streambuf*> bufs;
    };
-   DebugBuffer myBuffer;
+   DebugBuffer stream;
 };
 
 } // namespace cuda_nbody

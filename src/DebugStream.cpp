@@ -1,6 +1,4 @@
-#include <iostream>
 #include <fstream>
-#include <vector>
 #include <algorithm>
 #include <functional>
 #include <ctime>
@@ -8,16 +6,17 @@
 #include "DebugStream.h"
 using namespace cuda_nbody;
 
+/* Global output stream */
 DebugStream output;
 
 DebugStream::DebugStream() 
       : std::ostream(NULL) {
-   std::ostream::rdbuf(&myBuffer);
+   std::ostream::rdbuf(&stream);
 }
 
 void DebugStream::LinkStream(std::ostream& out) {
    out.flush();
-   myBuffer.AddBuffer(out.rdbuf());
+   stream.AddBuffer(out.rdbuf());
 }
 
 std::string DebugStream::GenerateFilename() const {
@@ -28,4 +27,15 @@ std::string DebugStream::GenerateFilename() const {
    timeinfo = localtime(&rawtime);
    strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", timeinfo);
    return "logs/" + std::string(buffer) + ".log";
+}
+
+int DebugStream::DebugBuffer::overflow(int c) {
+   std::for_each(bufs.begin(),
+                 bufs.end(),
+                 std::bind2nd(std::mem_fun(&std::streambuf::sputc), c));
+   return c;
+}
+
+void DebugStream::DebugBuffer::AddBuffer(std::streambuf* buf) {
+   bufs.push_back(buf);
 }

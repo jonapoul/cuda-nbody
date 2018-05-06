@@ -1,16 +1,18 @@
 CXX      = g++ -std=c++17
-CXXFLAGS = -c -Wall
+CXXFLAGS = -c $(LDFLAGS)
 LD       = $(CXX)
-LDFLAGS  = -Wall
+
+# https://www.reddit.com/r/programming/comments/8gh0cq/gcc_81_released/dybxx5t/
+LDFLAGS  = -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wundef -Wno-unused -Wno-variadic-macros -Wno-parentheses -fdiagnostics-show-option
 
 ROOTDIR := .
 OBJDIR  := obj
 BINDIR  := bin
 SRCDIR  := src
 INCDIR  := inc
+LOGDIR  := logs
 
 LIBS :=
-#-lfolly -lglog -lgflags -ldouble-conversion -lboost_regex
 
 INC  = -I. \
        -I$(INCDIR)
@@ -28,11 +30,13 @@ $(EXEC): $(OBJ) | dir
 dir:
 	mkdir -p $(OBJDIR)
 	mkdir -p $(BINDIR)
+	mkdir -p $(LOGDIR)
 
 clean:
 	rm -f $(OBJDIR)/*   2>/dev/null || true
 	rm -f $(BINDIR)/*   2>/dev/null || true
 	rm -f $(SRCDIR)/*.o 2>/dev/null || true
+	rm -f $(LOGDIR)/*   2>/dev/null || true
 
 diff:
 	git diff --stat
