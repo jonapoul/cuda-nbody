@@ -12,7 +12,8 @@ SRCDIR  := src
 INCDIR  := inc
 LOGDIR  := logs
 
-LIBS :=
+FOLLY_LIBS := -lfolly -lglog -lgflags -ldouble-conversion -lboost_regex
+LIBS = $(FOLLY_LIBS)
 
 INC  = -I. \
        -I$(INCDIR)
@@ -36,7 +37,6 @@ clean:
 	rm -f $(OBJDIR)/*   2>/dev/null || true
 	rm -f $(BINDIR)/*   2>/dev/null || true
 	rm -f $(SRCDIR)/*.o 2>/dev/null || true
-	rm -f $(LOGDIR)/*   2>/dev/null || true
 
 diff:
 	git diff --stat

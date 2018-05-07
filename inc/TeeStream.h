@@ -1,5 +1,5 @@
-#ifndef CUDANBODY_DEBUGSTREAM_H
-#define CUDANBODY_DEBUGSTREAM_H
+#ifndef CUDANBODY_TEESTREAM_H
+#define CUDANBODY_TEESTREAM_H
 
 #include <streambuf>
 #include <string>
@@ -8,23 +8,25 @@
 namespace cuda_nbody {
 
 /* From https://stackoverflow.com/a/1761027 */
-class DebugStream : public std::ostream {
+class TeeStream : public std::ostream {
 public: 
-   DebugStream();
+   TeeStream();
    void LinkStream(std::ostream& out);
    std::string GenerateFilename() const;
 
 private:
    struct DebugBuffer : public std::streambuf {
-      void AddBuffer(std::streambuf* buf);
+      void AddBuffer(std::streambuf * buf);
       virtual int overflow(int c);
-      std::vector<std::streambuf*> bufs;
+      std::string TimeStamp() const;
+      std::vector<std::streambuf *> bufs;
    };
    DebugBuffer stream;
 };
 
 } // namespace cuda_nbody
 
-extern cuda_nbody::DebugStream output;
+/* Allocated in main.cpp */
+extern cuda_nbody::TeeStream tee;
 
 #endif
