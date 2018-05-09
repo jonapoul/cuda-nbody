@@ -108,7 +108,9 @@ std::string Vector3::ToString() const {
    return ss.str();
 }
 
+namespace cuda_nbody {
 std::ostream& operator<<(std::ostream& os,
                          Vector3 const& v) {
    return os << v.ToString();
+}
 }

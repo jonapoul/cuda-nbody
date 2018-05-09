@@ -13,7 +13,8 @@ INCDIR  := inc
 LOGDIR  := logs
 
 FOLLY_LIBS := -lfolly -lglog -lgflags -ldouble-conversion -lboost_regex
-LIBS = $(FOLLY_LIBS)
+BOOST_LIBS := -lboost_system -lboost_filesystem -lboost_regex
+LIBS = $(BOOST_LIBS)
 
 INC  = -I. \
        -I$(INCDIR)

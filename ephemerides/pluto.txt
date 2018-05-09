@@ -1,5 +1,5 @@
 *******************************************************************************
- Revised: Nov 05, 2015             134340 Pluto                             999
+ Revised: Nov 05, 2015                    Pluto                             999
  
  Fit to all available observations (PLU043/DE433) including New Horizons
  encounter tracking.

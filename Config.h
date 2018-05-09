@@ -12,6 +12,13 @@
 # define DEBUG_PRINT(x)
 #endif
 
-typedef float cnb_float;
+#define CNB_FLOAT
+#ifdef CNB_FLOAT // use float
+# define cnb_float float
+# define STOF(x) std::stof(x)
+#else // use double
+# define cnb_float double
+# define STOF(x) std::stod(x)
+#endif
 
 #endif
