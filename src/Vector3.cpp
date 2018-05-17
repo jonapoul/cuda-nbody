@@ -108,6 +108,7 @@ std::string Vector3::ToString() const {
    return ss.str();
 }
 
+/* this namepsace scoping is to remove linking errors */
 namespace cuda_nbody {
 std::ostream& operator<<(std::ostream& os,
                          Vector3 const& v) {

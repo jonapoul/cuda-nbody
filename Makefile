@@ -16,7 +16,7 @@ FOLLY_LIBS := -lfolly -lglog -lgflags -ldouble-conversion -lboost_regex
 BOOST_LIBS := -lboost_system -lboost_filesystem -lboost_regex
 LIBS = $(BOOST_LIBS)
 
-INC  = -I. \
+INC  = -I$(ROOTDIR) \
        -I$(INCDIR)
 
 SRC := $(wildcard $(SRCDIR)/*.cpp)

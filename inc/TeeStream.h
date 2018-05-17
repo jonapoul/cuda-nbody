@@ -2,6 +2,7 @@
 #define CUDANBODY_TEESTREAM_H
 
 #include <streambuf>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -22,11 +23,12 @@ private:
       std::vector<std::streambuf *> bufs;
    };
    DebugBuffer stream;
+   std::ofstream file;
 };
 
 } // namespace cuda_nbody
 
-/* Allocated in main.cpp */
+/* Allocated in src/main.cpp */
 extern cuda_nbody::TeeStream tee;
 
 #endif

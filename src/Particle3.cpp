@@ -50,11 +50,22 @@ bool Particle3::ReadFromFile(std::string const& filename) {
    if (file_text.length() == 0)
       return false;
 
-   if (!ReadName(file_text))     tee << "name failed\n";
-   if (!ReadRadius(file_text))   tee << "radius failed\n";
-   if (!ReadMass(file_text))     tee << "mass failed\n";
-   if (!ReadPosition(file_text)) tee << "position failed\n";
-   if (!ReadVelocity(file_text)) tee << "velocity failed\n";
+   if (!ReadName(file_text)) {
+      tee << "name failed\n";
+      return false;
+   } else if (!ReadRadius(file_text)) {
+      tee << "radius failed\n";
+      return false;
+   } else if (!ReadMass(file_text)) {
+      tee << "mass failed\n";
+      return false;
+   } else if (!ReadPosition(file_text)) {
+      tee << "position failed\n";
+      return false;
+   } else if (!ReadVelocity(file_text)) {
+      tee << "velocity failed\n";
+      return false;
+   }
    return true;
 }
 
@@ -94,7 +105,7 @@ bool Particle3::ReadRadius(std::string const& file) {
    for (size_t i = 0; i < patterns.size(); ++i) {
       itr = boost::sregex_iterator(file.begin(), file.end(), patterns[i]);
       if (RegexMatchCount(itr) == 1) {
-         this->radius = STOF(itr->str());
+         this->radius = CNB_STOF(itr->str());
          switch (i) {
             case 0: radius *= 1e5; break;
             default: break;
@@ -127,7 +138,7 @@ bool Particle3::ReadMass(std::string const& file) {
    for (size_t i = 0; i < patterns.size(); ++i) {
       itr = boost::sregex_iterator(file.begin(), file.end(), patterns[i]);
       if (RegexMatchCount(itr) == 1) {
-         this->mass = STOF(itr->str());
+         this->mass = CNB_STOF(itr->str());
 
          /* find the scaling value from the above patterns */
          boost::regex scaling("(?<=10\\\\\\^)(\\d{1,})");
@@ -153,15 +164,15 @@ bool Particle3::ReadPosition(std::string const& file) {
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[0]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float x = STOF(itr->str());
+   cnb_float x = CNB_STOF(itr->str());
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[1]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float y = STOF(itr->str());
+   cnb_float y = CNB_STOF(itr->str());
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[2]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float z = STOF(itr->str());
+   cnb_float z = CNB_STOF(itr->str());
    this->position = Vector3(x, y, z);
    return true;
 }
@@ -176,15 +187,15 @@ bool Particle3::ReadVelocity(std::string const& file) {
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[0]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float vx = STOF(itr->str());
+   cnb_float vx = CNB_STOF(itr->str());
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[1]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float vy = STOF(itr->str());
+   cnb_float vy = CNB_STOF(itr->str());
 
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[2]);
    if (RegexMatchCount(itr) == 0) return false;
-   cnb_float vz = STOF(itr->str());
+   cnb_float vz = CNB_STOF(itr->str());
 
    this->velocity = Vector3(vx, vy, vz);
    return true;
@@ -202,6 +213,7 @@ bool Particle3::Compare(Particle3 const& p) const {
 }
 
 std::string Particle3::ToString() const {
+   /* REDO THIS SO IT ACTUALLY LOOKS DECENT */
    std::stringstream ss;
    ss << name << ' ' << radius << ' ' << mass << ' ' << position << ' ' << velocity << '\n';
    return ss.str();
@@ -216,6 +228,7 @@ Particle3& Particle3::operator=(Particle3 const& p) {
    return *this;
 }
 
+/* this namepsace scoping is to remove linking errors */
 namespace cuda_nbody {
 std::ostream& operator<<(std::ostream& os, Particle3 const& p) {
   std::string const indent(10, ' ');

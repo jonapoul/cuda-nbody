@@ -1,4 +1,4 @@
-#include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <functional>
 #include <ctime>
@@ -6,9 +6,15 @@
 #include "TeeStream.h"
 using namespace cuda_nbody;
 
+/* Global output stream, declared in TeeStream.h and allocated here */
+TeeStream tee;
+
 TeeStream::TeeStream() 
       : std::ostream(NULL) {
-   std::ostream::rdbuf(&stream);
+   std::ostream::rdbuf( &(this->stream) );
+   this->file.open( this->GenerateFilename() );
+   this->LinkStream(file);
+   this->LinkStream(std::cout);
 }
 
 void TeeStream::LinkStream(std::ostream& out) {
