@@ -1,9 +1,9 @@
 #include <math.h>
-#include <sstream>
+#include <string>
 
 #include "Config.h"
 #include "Vector3.h"
-using namespace cuda_nbody;
+using namespace cnb;
 
 Vector3::Vector3(cnb_float const XX,
                  cnb_float const YY,
@@ -103,13 +103,14 @@ bool Vector3::Compare(Vector3 const& that) const {
 }
 
 std::string Vector3::ToString() const {
-   std::stringstream ss;
-   ss << "(" << X() << ", " << Y() << ", " << Z() << ")";
-   return ss.str();
+   size_t const bufsize = 64;
+   char buf[bufsize];
+   snprintf(buf, bufsize, "(%+.2e %+.2e %+.2e)", X(), Y(), Z());
+   return std::string(buf);
 }
 
 /* this namepsace scoping is to remove linking errors */
-namespace cuda_nbody {
+namespace cnb {
 std::ostream& operator<<(std::ostream& os,
                          Vector3 const& v) {
    return os << v.ToString();

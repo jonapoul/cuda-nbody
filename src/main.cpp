@@ -3,13 +3,16 @@
 #include "Config.h"
 #include "Simulation.h"
 #include "TeeStream.h"
-using namespace cuda_nbody;
+using namespace cnb;
 
 int main() {
-   Simulation simulation;
-   simulation.ReadParticlesFromFile("ephemerides");
-   tee << simulation.NumParticles() << " ephemerides successfully read in.\n";
-   simulation.CalculateInitialForces();
-   simulation.DetermineOrbitalCentres();
+   Units units("Units.param");
+   Constants constants("Constants.param");
+   Simulation sim(&units, &constants);
+   sim.ReadParticlesFromDirectory("ephemerides");
+
+   sim.CalculateInitialForces();
+   sim.DetermineOrbitalCentres();
+
    return EXIT_SUCCESS;
 }

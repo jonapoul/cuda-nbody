@@ -4,7 +4,7 @@
 #include <ctime>
 
 #include "TeeStream.h"
-using namespace cuda_nbody;
+using namespace cnb;
 
 /* Global output stream, declared in TeeStream.h and allocated here */
 TeeStream tee;

@@ -3,7 +3,7 @@
 
 #include "Config.h"
 
-namespace cuda_nbody {
+namespace cnb {
 
 class Integrator {
 public:
@@ -14,6 +14,6 @@ private:
    int x;
 };
 
-} // namespace cuda_nbody
+} // namespace cnb
 
 #endif

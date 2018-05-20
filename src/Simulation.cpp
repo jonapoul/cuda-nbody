@@ -3,31 +3,46 @@ namespace fs = boost::filesystem;
 
 #include "Simulation.h"
 #include "TeeStream.h"
-using namespace cuda_nbody;
+#include "Constants.h"
+#include "Units.h"
+using namespace cnb;
 
-Simulation::Simulation() { }
+size_t Simulation::LongestParticleName = 0;
 
-size_t Simulation::NumParticles() const { return particles.size(); }
+Simulation::Simulation(Units * u,
+                       Constants * c) 
+      : units(u), constants(c) {
+   /* blank */
+}
 
-void Simulation::ReadParticlesFromFile(std::string const& directory) {
+size_t Simulation::NumParticles() const {
+   return particles.size();
+}
+
+void Simulation::ReadParticlesFromDirectory(std::string const& directory) {
+   size_t FileCount = 0;
    /* Read in the particles from the ephemerides directory */
    for (auto& file : fs::directory_iterator(directory)) {
       if (!fs::is_regular_file(file)) {
          continue;
       }
+      FileCount++;
       Particle3 p;
-      std::string path_string = file.path().string();
+      std::string const path_string = file.path().string();
       if ( p.ReadFromFile(path_string) ) {
+         if (p.Name().length() > Simulation::LongestParticleName) {
+            Simulation::LongestParticleName = p.Name().length();
+         }
          this->particles.push_back(p);
-         tee << p << '\n';
+      } else {
+         tee << "Failed reading '" << path_string << "'\n";
       }
    }
-
-   /* Check if we've failed any */
-   if (particles.size() != cnt) {
-      tee << "Not all ephemerides were successfully read in!\n";
-      exit(EXIT_FAILURE);
+   for (auto& p : particles) {
+      tee << p << '\n';
    }
+   tee << NumParticles() << "/" << FileCount
+       << " ephemerides successfully read in.\n";
 }
 
 void Simulation::UpdateParticlePositions() {

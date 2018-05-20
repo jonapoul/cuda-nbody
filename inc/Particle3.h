@@ -10,7 +10,7 @@
 #include "Config.h"
 #include "Vector3.h"
 
-namespace cuda_nbody {
+namespace cnb {
 
 typedef enum {
    EULER,
@@ -65,6 +65,6 @@ private:
    size_t RegexMatchCount(boost::sregex_iterator itr);
 };
 
-} // namespace cuda_nbody
+} // namespace cnb
 
 #endif

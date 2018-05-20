@@ -3,13 +3,26 @@
 
 #include "Config.h"
 
+namespace cnb {
+
 class Constants {
 public:
    Constants(std::string const& filename);
 
-   cnb_float G;   /* gravitational constant (kg-1 m3 s-2) */
-   cnb_float M_E; /* earth mass (kg) */
-   cnb_float AU;
+   cnb_float c;         /* speed of light */
+   cnb_float e;         /* electron charge */
+   cnb_float G;         /* graviational constant */
+   cnb_float h;         /* planck */
+   cnb_float hbar;      /* reduced planck */
+   cnb_float H_0;        /* hubble */
+   cnb_float k_b;       /* boltzmann */
+   cnb_float m_e;       /* electron mass */
+   cnb_float m_p;       /* proton mass */
+   cnb_float epsilon_0; /* permittivity of free space */
+   cnb_float mu_0;      /* permeability of free space */
+   cnb_float sigma;     /* stefan boltzmann */
 };
+
+} /* namespace cnb */
 
 #endif

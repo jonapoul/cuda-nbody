@@ -11,9 +11,10 @@
 namespace fs = boost::filesystem;
 
 #include "Particle3.h"
+#include "Simulation.h"
 #include "TeeStream.h"
 
-using namespace cuda_nbody;
+using namespace cnb;
 
 Particle3::Particle3() 
    : position({}), velocity({}), mass(0.0), radius(0.0), name("") { }
@@ -229,14 +230,21 @@ Particle3& Particle3::operator=(Particle3 const& p) {
 }
 
 /* this namepsace scoping is to remove linking errors */
-namespace cuda_nbody {
+namespace cnb {
+
 std::ostream& operator<<(std::ostream& os, Particle3 const& p) {
-  std::string const indent(10, ' ');
-  os << p.Name() << ":\n";
-  os << indent << "Position: " << p.Position().ToString() << '\n';
-  os << indent << "Velocity: " << p.Velocity().ToString() << '\n';
-  os << indent << "Mass:     " << p.Mass() << '\n';
-  os << indent << "Radius:   " << p.Radius() << '\n';
-  return os;
+   size_t const bufsize = Simulation::LongestParticleName;
+   if (p.Name().length() < bufsize) {
+      os << std::string(bufsize-p.Name().length(), ' ');
+   }
+   os << p.Name() << ' ';
+   os << "pos=" << p.Position() << ' ';
+   os << "vel=" << p.Velocity() << ' ';
+
+   char buf[64];
+   snprintf(buf, 64, "mass=%.2e radius=%.2e", p.Mass(), p.Radius());
+   os << buf;
+   return os;
 }
-}
+
+} /* namespace cnb */

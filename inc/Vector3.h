@@ -4,7 +4,7 @@
 #include <vector>
 #include "Config.h"
 
-namespace cuda_nbody {
+namespace cnb {
 
 class Vector3 {
 public:
@@ -46,6 +46,6 @@ private:
    cnb_float zz;
 };
 
-} // namespace cuda_nbody
+} // namespace cnb
 
 #endif

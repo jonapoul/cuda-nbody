@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace cuda_nbody {
+namespace cnb {
 
 /* From https://stackoverflow.com/a/1761027 */
 class TeeStream : public std::ostream {
@@ -26,9 +26,9 @@ private:
    std::ofstream file;
 };
 
-} // namespace cuda_nbody
+} // namespace cnb
 
 /* Allocated in src/main.cpp */
-extern cuda_nbody::TeeStream tee;
+extern cnb::TeeStream tee;
 
 #endif
