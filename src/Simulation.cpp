@@ -1,3 +1,6 @@
+#include <algorithm>
+using namespace std;
+
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
@@ -19,7 +22,7 @@ size_t Simulation::NumParticles() const {
    return particles.size();
 }
 
-void Simulation::ReadParticlesFromDirectory(std::string const& directory) {
+void Simulation::ReadParticlesFromDirectory(string const& directory) {
    size_t FileCount = 0;
    /* Read in the particles from the ephemerides directory */
    for (auto& file : fs::directory_iterator(directory)) {
@@ -27,22 +30,29 @@ void Simulation::ReadParticlesFromDirectory(std::string const& directory) {
          continue;
       }
       FileCount++;
-      Particle3 p;
-      std::string const path_string = file.path().string();
+      Particle3 p(this);
+      string const path_string = file.path().string();
       if ( p.ReadFromFile(path_string) ) {
-         if (p.Name().length() > Simulation::LongestParticleName) {
-            Simulation::LongestParticleName = p.Name().length();
-         }
+         LongestParticleName = MAX( p.Name().length(), LongestParticleName );
          this->particles.push_back(p);
       } else {
-         tee << "Failed reading '" << path_string << "'\n";
+         terr << "Failed reading '" << path_string << "'\n";
+         exit(1);
       }
    }
+
+   auto SortParticles = [](Particle3 const& p1, Particle3 const& p2) {
+      return p1.Name() < p2.Name();
+   };
+   sort(particles.begin(), particles.end(), SortParticles);
    for (auto& p : particles) {
       tee << p << '\n';
    }
-   tee << NumParticles() << "/" << FileCount
-       << " ephemerides successfully read in.\n";
+   tee << NumParticles() << "/" << FileCount << " ephemerides read in.\n";
+}
+
+void Simulation::ConvertInitialConditionUnits() {
+   int x;
 }
 
 void Simulation::UpdateParticlePositions() {

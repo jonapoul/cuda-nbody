@@ -19,7 +19,6 @@ private:
    struct DebugBuffer : public std::streambuf {
       void AddBuffer(std::streambuf * buf);
       virtual int overflow(int c);
-      std::string TimeStamp() const;
       std::vector<std::streambuf *> bufs;
    };
    DebugBuffer stream;
@@ -30,5 +29,7 @@ private:
 
 /* Allocated in src/main.cpp */
 extern cnb::TeeStream tee;
+
+#define terr tee << __FUNCTION__ << " " << __LINE__ << ": "
 
 #endif

@@ -12,15 +12,10 @@
 
 namespace cnb {
 
-typedef enum {
-   EULER,
-   RK2,
-   RK4
-} IntegrationType;
-
+class Simulation;
 class Particle3 {
 public:
-   Particle3();
+   Particle3(Simulation * s);
    Particle3(Particle3 const& p);
    Particle3& operator=(Particle3 const& p);
 
@@ -55,6 +50,7 @@ private:
    cnb_float mass;   /* earth masses */
    cnb_float radius; /* km */
    std::string name;
+   Simulation * sim;
 
    bool ReadName(std::string const& file_contents);
    bool ReadRadius(std::string const& file_contents);

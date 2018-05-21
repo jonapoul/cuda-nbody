@@ -16,15 +16,17 @@ namespace fs = boost::filesystem;
 
 using namespace cnb;
 
-Particle3::Particle3() 
-   : position({}), velocity({}), mass(0.0), radius(0.0), name("") { }
+Particle3::Particle3(Simulation * s) 
+   : position({}), velocity({}), mass(0.0),
+     radius(0.0), name(""), sim(s) { }
 
 Particle3::Particle3(Particle3 const& p) {
   this->position = p.position;
   this->velocity = p.velocity;
-  this->mass   = p.mass;
-  this->radius  = p.radius;
-  this->name   = p.name;
+  this->mass     = p.mass;
+  this->radius   = p.radius;
+  this->name     = p.name;
+  this->sim      = p.sim;
 }
 
 cnb_float    Particle3::Mass()     const { return this->mass; }
@@ -107,10 +109,8 @@ bool Particle3::ReadRadius(std::string const& file) {
       itr = boost::sregex_iterator(file.begin(), file.end(), patterns[i]);
       if (RegexMatchCount(itr) == 1) {
          this->radius = CNB_STOF(itr->str());
-         switch (i) {
-            case 0: radius *= 1e5; break;
-            default: break;
-         }
+         radius *= (i == 0) ? 1e8 : 1e3;
+         radius /= sim->units->mass.val;
          return true;
       }
    }
@@ -118,7 +118,6 @@ bool Particle3::ReadRadius(std::string const& file) {
 }
 
 bool Particle3::ReadMass(std::string const& file) {
-   cnb_float const earth_mass = 5.97219e24; // kg
    std::vector<boost::regex> const patterns {
       boost::regex("(?<=Mass \\(10\\^19 kg\\)\\s{8}=)(\\s*\\d{1,}\\.*\\d*)"),
       boost::regex("(?<=Mass \\(10\\^19 kg\\)\\s{9}=)(\\s*\\d{1,}\\.*\\d*)"),
@@ -147,7 +146,8 @@ bool Particle3::ReadMass(std::string const& file) {
          itr2 = boost::sregex_iterator(current.begin(), current.end(), scaling);
          if (RegexMatchCount(itr2) == 1) {
             /* scale to units of earth mass */
-            mass *= (pow(10, stoi(itr2->str())) / earth_mass);
+            mass *= pow(10, stoi(itr2->str()));
+            mass /= sim->units->mass.val;
          }
          return true;
       }
@@ -174,7 +174,9 @@ bool Particle3::ReadPosition(std::string const& file) {
    itr = boost::sregex_iterator(file.begin(), file.end(), patterns[2]);
    if (RegexMatchCount(itr) == 0) return false;
    cnb_float z = CNB_STOF(itr->str());
+
    this->position = Vector3(x, y, z);
+   this->position /= sim->units->length.val;
    return true;
 }
 
@@ -199,6 +201,7 @@ bool Particle3::ReadVelocity(std::string const& file) {
    cnb_float vz = CNB_STOF(itr->str());
 
    this->velocity = Vector3(vx, vy, vz);
+   this->velocity *= (sim->units->time.val / sim->units->length.val);
    return true;
 }
 

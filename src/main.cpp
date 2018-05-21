@@ -7,9 +7,10 @@ using namespace cnb;
 
 int main() {
    Units units("Units.param");
-   Constants constants("Constants.param");
+   Constants constants("Constants.param", units);
    Simulation sim(&units, &constants);
    sim.ReadParticlesFromDirectory("ephemerides");
+   sim.ConvertInitialConditionUnits();
 
    sim.CalculateInitialForces();
    sim.DetermineOrbitalCentres();

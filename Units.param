@@ -1,28 +1,12 @@
 
-Time       s
-Mass       kg
-Distance   m
-
-# Distance:
-#   fm  = femtometre         = 1e-15m
-#   pm  = picometre          = 1e-12m
-#   nm  = nanometre          = 1e-9m
-#   um  = micrometre         = 1e-6m
-#   m   = metre              = 1m
-#   km  = kilometre          = 1e3m
-#   R_E = earth radius       = 6.3e6m
-#   LD  = lunar distance     = 3.8e8m
-#   AU  = astronomical unit  = 1.5e11m
-#   ly  = lightyear          = 9.5e15m
-#   pc  = parsec             = 3.1e16m
-#   kpc = kiloparsec         = 3.1e19m
-#   Mpc = megaparsec         = 3.1e22m
+Time       day
+Distance   AU
+Mass       M_E
+Charge     C
 
 # Time:
 #   fs  = femtosecond = 1e-15s
-#   ps  = picosecond  = 1e-12s
 #   ns  = nanosecond  = 1e-9s
-#   us  = microsecond = 1e-6s
 #   s   = second      = 1s
 #   min = minute      = 60s
 #   hr  = hour        = 3.6e3s
@@ -32,16 +16,30 @@ Distance   m
 #   kyr = kiloyear    = 3.1e10s
 #   Myr = megayear    = 3.1e14s
 
+# Distance:
+#   fm  = femtometre        = 1e-15m
+#   nm  = nanometre         = 1e-9m
+#   m   = metre             = 1m
+#   km  = kilometre         = 1e3m
+#   R_E = earth radius      = 6.3e6m
+#   AU  = astronomical unit = 1.5e11m
+#   ly  = lightyear         = 9.5e15m
+#   pc  = parsec            = 3.1e16m
+#   kpc = kiloparsec        = 3.1e19m
+#   Mpc = megaparsec        = 3.1e22m
+
 # Mass:
-#   m_e = electron = 9.1e-31kg
-#   m_p = proton = 1.7e-27kg
-#   fg = femtogram = 1e-18kg
-#   pg = picogram = 1e-15kg
-#   ng = nanogram = 1e-12kg
-#   ug = microgram = 1e-9kg
-#   g = gram = 1e-3kg
-#   kg = kilogram = 1kg
-#   ton = metric ton = 1e3kg
-#   M_M = moon = 7.3e22kg
-#   M_E = earth = 6e24kg
-#   M_S = sun = 2e30kg
+#   m_e = electron  = 9.1e-31kg
+#   m_p = proton    = 1.7e-27kg
+#   fg  = femtogram = 1e-18kg
+#   ng  = nanogram  = 1e-12kg
+#   g   = gram      = 1e-3kg
+#   kg  = kilogram  = 1kg
+#   ton = ton       = 1e3kg
+#   M_M = moon      = 7.3e22kg
+#   M_E = earth     = 6e24kg
+#   M_S = sun       = 2e30kg
+
+# Charge:
+#   e = electron = 1.6e-19C
+#   C = coulomb  = 1C

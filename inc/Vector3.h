@@ -33,6 +33,17 @@ public:
    Vector3&    operator-=(const Vector3&);
    Vector3     operator-() const;
 
+   template<typename T> Vector3& operator*=(const T& val) {
+      this->X() *= val;
+      this->Y() *= val;
+      this->Z() *= val;
+      return *this;
+   }
+   template<typename T> Vector3& operator/=(const T& val) {
+      *this *= (1.0 / val);
+      return *this;
+   }
+
    cnb_float   Magnitude() const;
    cnb_float   MagSquared() const;
    cnb_float   Dot(Vector3 const&) const;

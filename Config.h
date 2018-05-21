@@ -8,7 +8,7 @@
 #define CNB_TIMESTEP   1e-1  // days
 
 #ifdef CNB_DEBUG
-# define DEBUG_PRINT(x) std::cout<<#x<<" = '"<<x"'\n";
+# define DEBUG_PRINT(x) tee<<#x<<" = '"<<x<<"'\n";
 #else
 # define DEBUG_PRINT(x)
 #endif
@@ -29,5 +29,8 @@
 # define MAX(a,b) (a>b?a:b)
 # define MIN(a,b) (a<b?a:b)
 #endif
+
+#include <limits>
+#define FLOAT_MAX std::numeric_limits<cnb_float>::max()
 
 #endif
