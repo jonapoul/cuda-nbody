@@ -1,3 +1,4 @@
+#include <ctime>
 #include <algorithm>
 using namespace std;
 
@@ -10,7 +11,9 @@ namespace fs = boost::filesystem;
 #include "Units.h"
 using namespace cnb;
 
-size_t Simulation::LongestParticleName = 0;
+extern "C" {
+#include "PF.h"
+}
 
 Simulation::Simulation(Units * u,
                        Constants * c) 
@@ -18,8 +21,83 @@ Simulation::Simulation(Units * u,
    /* blank */
 }
 
+Simulation::~Simulation() {
+   traj.close();
+}
+
 size_t Simulation::NumParticles() const {
    return particles.size();
+}
+
+void Simulation::OpenTrajectoryFile(string const& directory) {
+   time_t rawtime;
+   struct tm * timeinfo;
+   char filename[32];
+   time(&rawtime);
+   timeinfo = localtime(&rawtime);
+   strftime(filename, sizeof(filename), "%Y%m%d_%H%M%S", timeinfo);
+   std::string const filepath = directory + '/' + string(filename) + ".xyz";
+   traj.open(filepath);
+   if (!traj.is_open()) {
+      terr << "Couldn't open trajectory file '" << filename << "'\n";
+      exit(1);
+   }
+}
+
+void Simulation::ReadParameters(std::string const& filename) {
+   size_t const NumParams = 3;
+#ifdef CNB_FLOAT
+   DataType type = FLOAT;
+#else
+   DataType type = DOUBLE;
+#endif
+   PF_ParameterEntry * Params = new PF_ParameterEntry[NumParams];
+   for (size_t i = 0; i < NumParams; i++) {
+      Params[i].Type      = type;
+      Params[i].IsBoolean = 0;
+      Params[i].IsArray   = 0;
+   }
+
+   char ParticlesToKeep_str[MAX_PARAMETER_NAME_LENGTH];
+
+   strncpy(Params[0].Parameter, "Timestep",  MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[1].Parameter, "EndTime",   MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[2].Parameter, "Particles", MAX_PARAMETER_NAME_LENGTH);
+   Params[0].Pointer = &dt;
+   Params[1].Pointer = &t_max;
+   Params[2].Pointer = &ParticlesToKeep_str;
+   Params[2].Type = STRING;
+
+   /* Open file for reading */
+   FILE * File;
+   if ( (File = fopen(filename.c_str(), "r")) == NULL) {
+      terr << "Failed to open constants file '" << filename << "'\n";
+      exit(1);
+   }
+
+   /* Read the constants */
+   if (PF_ReadParameterFile(File, Params, NumParams) != EXIT_SUCCESS) {
+      terr << "Failed to read constants file '" << filename << "'\n";
+      exit(1);
+   }
+
+   /* Clean up */
+   delete[] Params;
+   fclose(File);
+
+   tee << "Timestep  = " << dt << '\n';
+   tee << "EndTime   = " << t_max << '\n';
+
+   if (string(ParticlesToKeep_str) != "All") {
+      int const ParticlesToKeep = stoi(ParticlesToKeep_str);
+      tee << "Particles = " << ParticlesToKeep << '\n';
+      for (size_t i = ParticlesToKeep; i < particles.size(); ++i) {
+         particles.erase(particles.begin() + i);
+      }
+   } else {
+      tee << "Particles = All\n";
+   }
+
 }
 
 void Simulation::ReadParticlesFromDirectory(string const& directory) {
@@ -42,7 +120,7 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
    }
 
    auto SortParticles = [](Particle3 const& p1, Particle3 const& p2) {
-      return p1.Name() < p2.Name();
+      return p1.Mass() > p2.Mass();
    };
    sort(particles.begin(), particles.end(), SortParticles);
    for (auto& p : particles) {
@@ -51,19 +129,15 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
    tee << NumParticles() << "/" << FileCount << " ephemerides read in.\n";
 }
 
-void Simulation::ConvertInitialConditionUnits() {
+void Simulation::UpdatePositions() {
    int x;
 }
 
-void Simulation::UpdateParticlePositions() {
+void Simulation::UpdateVelocities() {
    int x;
 }
 
-void Simulation::UpdateParticleVelocities() {
-   int x;
-}
-
-void Simulation::UpdateParticleForces() {
+void Simulation::UpdateForces() {
    int x;
 }
 
@@ -73,4 +147,16 @@ void Simulation::CalculateInitialForces() {
 
 void Simulation::DetermineOrbitalCentres() {
    int x;
+}
+
+void Simulation::PrintToTrajectoryFile(size_t const timestep) {
+   traj << NumParticles() << '\n';
+   traj << "Point = " << timestep << '\n';
+   for (const auto& p : particles) {
+      traj << p.Name() << ' ';
+      if (p.Name().length() < LongestParticleName) {
+         traj << string(LongestParticleName - p.Name().length(), ' ');
+      }
+      traj << p.Position() << '\n';
+   }
 }

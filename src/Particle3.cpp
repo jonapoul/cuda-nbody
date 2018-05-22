@@ -2,6 +2,7 @@
 #include <math.h>
 #include <sstream>
 #include <iterator>
+using namespace std;
 
 /* Boost regex is used here just because std doesn't support positive
    lookbehinds, for whatever silly reason */
@@ -29,27 +30,27 @@ Particle3::Particle3(Particle3 const& p) {
   this->sim      = p.sim;
 }
 
-cnb_float    Particle3::Mass()     const { return this->mass; }
-cnb_float&   Particle3::Mass()           { return this->mass; }
-cnb_float    Particle3::Radius()   const { return this->radius; }
-cnb_float&   Particle3::Radius()         { return this->radius; }
-Vector3      Particle3::Position() const { return this->position; }
-Vector3&     Particle3::Position()       { return this->position; }
-Vector3      Particle3::Velocity() const { return this->velocity; }
-Vector3&     Particle3::Velocity()       { return this->velocity; }
-std::string  Particle3::Name()     const { return this->name; }
-std::string& Particle3::Name()           { return this->name; }
+cnb_float  Particle3::Mass()     const { return this->mass; }
+cnb_float& Particle3::Mass()           { return this->mass; }
+cnb_float  Particle3::Radius()   const { return this->radius; }
+cnb_float& Particle3::Radius()         { return this->radius; }
+Vector3    Particle3::Position() const { return this->position; }
+Vector3&   Particle3::Position()       { return this->position; }
+Vector3    Particle3::Velocity() const { return this->velocity; }
+Vector3&   Particle3::Velocity()       { return this->velocity; }
+string     Particle3::Name()     const { return this->name; }
+string&    Particle3::Name()           { return this->name; }
 
-bool Particle3::ReadFromFile(std::string const& filename) {
-   std::ifstream file(filename);
+bool Particle3::ReadFromFile(string const& filename) {
+   ifstream file(filename);
    if (!file.is_open())
       return false;
 
    /* Read the file contents into a stringstream and pass it to a string */
-   std::stringstream instream;
+   stringstream instream;
    instream << file.rdbuf();
    file.close();
-   std::string const file_text = instream.str();
+   string const file_text = instream.str();
    if (file_text.length() == 0)
       return false;
 
@@ -72,8 +73,8 @@ bool Particle3::ReadFromFile(std::string const& filename) {
    return true;
 }
 
-bool Particle3::ReadName(std::string const& file) {
-   std::vector<boost::regex> const patterns {
+bool Particle3::ReadName(string const& file) {
+   vector<boost::regex> const patterns {
       boost::regex("(?<=Revised: \\w{3} \\d{2}, \\d{4})(\\s{1,}\\w{1,})"),
       boost::regex("(?<=Revised : \\w{3} \\d{2}, \\d{4})(\\s{1,}\\w{1,})"),
    };
@@ -90,8 +91,8 @@ bool Particle3::ReadName(std::string const& file) {
    return false;
 }
 
-bool Particle3::ReadRadius(std::string const& file) {
-   std::vector<boost::regex> const patterns {
+bool Particle3::ReadRadius(string const& file) {
+   vector<boost::regex> const patterns {
       boost::regex("(?<=Radius \\(photosphere\\)  =)(\\s*\\d{1,}\\.*\\d*)"),
       boost::regex("(?<=Mean radius \\(km\\)\\s{6}=)(\\s*\\d{1,}\\.*\\d*)"),
       boost::regex("(?<=Mean Radius \\(km\\)\\s{7}=)(\\s*\\d{1,}\\.*\\d*)"),
@@ -110,15 +111,15 @@ bool Particle3::ReadRadius(std::string const& file) {
       if (RegexMatchCount(itr) == 1) {
          this->radius = CNB_STOF(itr->str());
          radius *= (i == 0) ? 1e8 : 1e3;
-         radius /= sim->units->mass.val;
+         radius /= sim->units->length.val;
          return true;
       }
    }
    return false;
 }
 
-bool Particle3::ReadMass(std::string const& file) {
-   std::vector<boost::regex> const patterns {
+bool Particle3::ReadMass(string const& file) {
+   vector<boost::regex> const patterns {
       boost::regex("(?<=Mass \\(10\\^19 kg\\)\\s{8}=)(\\s*\\d{1,}\\.*\\d*)"),
       boost::regex("(?<=Mass \\(10\\^19 kg\\)\\s{9}=)(\\s*\\d{1,}\\.*\\d*)"),
       boost::regex("(?<=Mass \\(10\\^19 kg \\)\\s{8}=)(\\s*\\d{1,}\\.*\\d*)"),
@@ -142,7 +143,7 @@ bool Particle3::ReadMass(std::string const& file) {
 
          /* find the scaling value from the above patterns */
          boost::regex scaling("(?<=10\\\\\\^)(\\d{1,})");
-         std::string const current = patterns[i].str();
+         string const current = patterns[i].str();
          itr2 = boost::sregex_iterator(current.begin(), current.end(), scaling);
          if (RegexMatchCount(itr2) == 1) {
             /* scale to units of earth mass */
@@ -155,8 +156,8 @@ bool Particle3::ReadMass(std::string const& file) {
    return false;
 }
 
-bool Particle3::ReadPosition(std::string const& file) {
-   std::vector<boost::regex> const patterns {
+bool Particle3::ReadPosition(string const& file) {
+   vector<boost::regex> const patterns {
       boost::regex("(?<=X =)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
       boost::regex("(?<=Y =)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
       boost::regex("(?<=Z =)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
@@ -176,12 +177,12 @@ bool Particle3::ReadPosition(std::string const& file) {
    cnb_float z = CNB_STOF(itr->str());
 
    this->position = Vector3(x, y, z);
-   this->position /= sim->units->length.val;
+   this->position *= ( 1e3 / sim->units->length.val );
    return true;
 }
 
-bool Particle3::ReadVelocity(std::string const& file) {
-   std::vector<boost::regex> const patterns {
+bool Particle3::ReadVelocity(string const& file) {
+   vector<boost::regex> const patterns {
       boost::regex("(?<=VX=)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
       boost::regex("(?<=VY=)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
       boost::regex("(?<=VZ=)((\\-| )\\d{1,}\\.*\\d*E(\\+|\\-)\\d{2})"),
@@ -201,7 +202,7 @@ bool Particle3::ReadVelocity(std::string const& file) {
    cnb_float vz = CNB_STOF(itr->str());
 
    this->velocity = Vector3(vx, vy, vz);
-   this->velocity *= (sim->units->time.val / sim->units->length.val);
+   this->velocity *= (1e3 * sim->units->time.val / sim->units->length.val);
    return true;
 }
 
@@ -216,9 +217,9 @@ bool Particle3::Compare(Particle3 const& p) const {
        && abs(this->radius - p.radius) / this->radius < CNB_EPSILON;
 }
 
-std::string Particle3::ToString() const {
+string Particle3::ToString() const {
    /* REDO THIS SO IT ACTUALLY LOOKS DECENT */
-   std::stringstream ss;
+   stringstream ss;
    ss << name << ' ' << radius << ' ' << mass << ' ' << position << ' ' << velocity << '\n';
    return ss.str();
 }
@@ -235,10 +236,10 @@ Particle3& Particle3::operator=(Particle3 const& p) {
 /* this namepsace scoping is to remove linking errors */
 namespace cnb {
 
-std::ostream& operator<<(std::ostream& os, Particle3 const& p) {
-   size_t const bufsize = Simulation::LongestParticleName;
+ostream& operator<<(ostream& os, Particle3 const& p) {
+   size_t const bufsize = p.sim->LongestParticleName;
    if (p.Name().length() < bufsize) {
-      os << std::string(bufsize-p.Name().length(), ' ');
+      os << string(bufsize-p.Name().length(), ' ');
    }
    os << p.Name() << ' ';
    os << "pos=" << p.Position() << ' ';

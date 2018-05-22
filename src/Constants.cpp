@@ -9,6 +9,7 @@ using namespace std;
 #include "Constants.h"
 #include "TeeStream.h"
 #include "Units.h"
+#include "OtherFunctions.h"
 using namespace cnb;
 
 extern "C" {
@@ -23,16 +24,30 @@ Constants::Constants(string const& filename,
       terr << "Constants File '" << filename << "'' doesn't exist\n";
       exit(1);
    }
+   /* do the deed */
+   ReadFromFile(filename);
+   ConvertUnits(units);
+   Print();
+}
 
-#ifdef CNB_FLOAT
-   DataType type = FLOAT;
-#else
-   DataType type = DOUBLE;
-#endif
+void Constants::Print() const {
+   tee << "c    = " << c << '\n';
+   tee << "e    = " << e << '\n';
+   tee << "G    = " << G << '\n';
+   tee << "h    = " << h << '\n';
+   tee << "hbar = " << hbar << '\n';
+   tee << "k_b  = " << k_b << '\n';
+   tee << "m_e  = " << m_e << '\n';
+   tee << "m_p  = " << m_p << '\n';
+   tee << "\u03B5_0  = " << epsilon_0 << '\n';
+   tee << "\u03BC_0  = " << mu_0 << '\n';
+}
+
+void Constants::ReadFromFile(std::string const& filename) {
    size_t const NumParams = 10;
    PF_ParameterEntry * Params = new PF_ParameterEntry[NumParams];
    for (size_t i = 0; i < NumParams; i++) {
-      Params[i].Type      = type;
+      Params[i].Type      = DOUBLE;
       Params[i].IsBoolean = 0;
       Params[i].IsArray   = 0;
    }
@@ -61,48 +76,45 @@ Constants::Constants(string const& filename,
    /* Open file for reading */
    FILE * File;
    if ( (File = fopen(filename.c_str(), "r")) == NULL) {
-      terr << "Failed to open constants File '" << filename << "'\n";
+      terr << "Failed to open constants file '" << filename << "'\n";
       exit(1);
    }
 
    /* Read the constants */
    if (PF_ReadParameterFile(File, Params, NumParams) != EXIT_SUCCESS) {
-      terr << "Failed to read constants File '" << filename << "'\n";
+      terr << "Failed to read constants file '" << filename << "'\n";
       exit(1);
    }
 
    /* Clean up */
    delete[] Params;
    fclose(File);
-
-   /* convert the units */
-   cnb_float const t = units.time.val;
-   cnb_float const m = units.mass.val;
-   cnb_float const l = units.length.val;
-   cnb_float const q = units.charge.val;
-   c         *= ( t / l );
-   e         *= ( q );
-   G         *= ( m * t*t / (l*l*l) );
-   h         *= ( t / (l*l * m) );
-   k_b       *= ( (t*t) / (m * l*l)  );
-   m_e       /= ( m );
-   m_p       /= ( m );
-   epsilon_0 *= ( m * l*l*l / (t*t * q*q) );
-   mu_0      *= ( q*q / (m * l) );
-   DEBUG_PRINT(c);
-
-   this->hbar = this->h / (2*M_PI);
 }
 
-void Constants::Print() const {
-   tee << "c         = " << c << '\n';
-   tee << "e         = " << e << '\n';
-   tee << "G         = " << G << '\n';
-   tee << "h         = " << h << '\n';
-   tee << "hbar      = " << hbar << '\n';
-   tee << "k_b       = " << k_b << '\n';
-   tee << "m_e       = " << m_e << '\n';
-   tee << "m_p       = " << m_p << '\n';
-   tee << "epsilon_0 = " << epsilon_0 << '\n';
-   tee << "mu_0      = " << mu_0 << '\n';
+void Constants::ConvertUnits(Units const& units) {
+   double const t = units.time.val;
+   double const m = units.mass.val;
+   double const l = units.length.val;
+   double const q = units.charge.val;
+   c         *= ( t / l );
+   e         *= ( q );
+   G         *= ( m*t*t / (l*l*l) );
+   h         *= ( t / (l*l*m) );
+   k_b       *= ( (t*t) / (m*l*l)  );
+   m_e       /= ( m );
+   m_p       /= ( m );
+   epsilon_0 *= ( m*l*l*l / (t*t*q*q) );
+   mu_0      *= ( q*q / (m*l) );
+
+   this->hbar = this->h / (2*M_PI);
+
+   CHECK_RANGE(c,         DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(e,         DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(G,         DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(h,         DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(k_b,       DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(m_e,       DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(m_p,       DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(epsilon_0, DOUBLE_MIN, DOUBLE_MAX);
+   CHECK_RANGE(mu_0,      DOUBLE_MIN, DOUBLE_MAX);
 }

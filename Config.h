@@ -4,8 +4,7 @@
 // #define CNB_CUDA
 #define CNB_DEBUG
 #define CNB_FLOAT
-#define CNB_EPSILON    1e-5  // fractional difference to define numerical equality
-#define CNB_TIMESTEP   1e-1  // days
+#define CNB_EPSILON 1e-5  /* fractional difference to define numerical equality */
 
 #ifdef CNB_DEBUG
 # define DEBUG_PRINT(x) tee<<#x<<" = '"<<x<<"'\n";
@@ -13,12 +12,12 @@
 # define DEBUG_PRINT(x)
 #endif
 
-#ifdef CNB_FLOAT // use float
+#ifdef CNB_FLOAT /* use float */
 # define cnb_float float
 # define CNB_STOF(x) std::stof(x)
 # define CNB_SQRT(x) x / cnb::rsqrt(x)
 # define CNB_RSQRT(x) cnb::rsqrt(x)
-#else // use double
+#else /* use double */
 # define cnb_float double
 # define CNB_STOF(x) std::stod(x)
 # define CNB_SQRT(x) sqrt(x)
@@ -31,6 +30,12 @@
 #endif
 
 #include <limits>
-#define FLOAT_MAX std::numeric_limits<cnb_float>::max()
+#define CNB_FLOAT_MAX std::numeric_limits<cnb_float>::max()
+#define CNB_FLOAT_MIN std::numeric_limits<cnb_float>::min()
+#define DOUBLE_MAX std::numeric_limits<double>::max()
+#define DOUBLE_MIN std::numeric_limits<double>::min()
+
+/* defined in OtherFunctions.cpp */
+#define CHECK_RANGE(x,min,max) cnb::check_range_impl(x,min,max,#x);
 
 #endif

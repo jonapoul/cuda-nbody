@@ -12,18 +12,21 @@ public:
    Constants(std::string const& filename,
              Units const& units);
 
-   void Print() const;
+   double c;         /* speed of light */
+   double e;         /* electron charge */
+   double G;         /* graviational constant */
+   double h;         /* planck */
+   double hbar;      /* reduced planck */
+   double k_b;       /* boltzmann */
+   double m_e;       /* electron mass */
+   double m_p;       /* proton mass */
+   double epsilon_0; /* permittivity of free space */
+   double mu_0;      /* permeability of free space */
 
-   cnb_float c;         /* speed of light */
-   cnb_float e;         /* electron charge */
-   cnb_float G;         /* graviational constant */
-   cnb_float h;         /* planck */
-   cnb_float hbar;      /* reduced planck */
-   cnb_float k_b;       /* boltzmann */
-   cnb_float m_e;       /* electron mass */
-   cnb_float m_p;       /* proton mass */
-   cnb_float epsilon_0; /* permittivity of free space */
-   cnb_float mu_0;      /* permeability of free space */
+private:
+   void ReadFromFile(std::string const& filename);
+   void ConvertUnits(Units const& units);
+   void Print() const;
 };
 
 

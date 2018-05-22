@@ -2,6 +2,8 @@
 #define CUDANBODY_SIMULATION_H
 
 #include <vector>
+#include <fstream>
+
 #include "Config.h"
 #include "Particle3.h"
 #include "Constants.h"
@@ -15,24 +17,29 @@ public:
               Constants * c);
    Simulation(Simulation const& s) = delete;
    Simulation& operator=(Simulation const& s) = delete;
+   ~Simulation();
 
+   void OpenTrajectoryFile(std::string const& directory);
    size_t NumParticles() const;
 
+   void ReadParameters(std::string const& filename);
    void ReadParticlesFromDirectory(std::string const& directory);
-   void ConvertInitialConditionUnits();
-   void UpdateParticlePositions();
-   void UpdateParticleVelocities();
-   void UpdateParticleForces();
+   void UpdatePositions();
+   void UpdateVelocities();
+   void UpdateForces();
    void CalculateInitialForces();
    void DetermineOrbitalCentres();
+   void PrintToTrajectoryFile(size_t const timestep);
 
-   static size_t LongestParticleName;
-
+   size_t LongestParticleName = 0;
    Units * units;
    Constants * constants;
+   cnb_float dt;
+   cnb_float t_max;
 
 private:
    std::vector<Particle3> particles;
+   std::ofstream traj;
 };
 
 } // namespace cnb
