@@ -1,36 +1,24 @@
 *******************************************************************************
- Revised: Jun 17, 2016                Uranus                                799
- 
- PHYSICAL DATA (updated 2009-May-26):
-  Mass (10^24 kg)       =    86.8103      Density (g/cm^3)       =  1.318
-  Equat. radius (1 bar) = 25559+-4 km     Polar radius (km)      = 24973+-20
-  Volumetric mean radius= 25362+-12 km    Flattening             =  0.02293
+ Revised: JUn 17, 2016              Titan / (Saturn)                        606
+                         http://ssd.jpl.nasa.gov/?sat_phys_par
+                           http://ssd.jpl.nasa.gov/?sat_elem
 
-  Rotation period       = 17.24+-0.01 hr  Rot. rate(10^-4 rad/s) =  1.012   
-  m = w^2a^3/GM         =  0.02954        Hydrostatic flat., fh  =  0.01987
-  Inferred rot. period  = 17.14+-0.9 hr   ks = 3*J2/m            =  0.357
-  Mom. of inert. I/MRo^2=  0.225          I/MRo^2 (upper bound)  =  0.232 
-  Rocky core mass (Mc/M)=  0.0012         Y factor (He/H ratio)  =  0.262+-.048
+ SATELLITE PHYSICAL PROPERTIES:
+  Mean Radius (km)       = 2575.5   +-  2.0  Density (g/cm^3) =  1.880 +- 0.004
+  Mass (10^19 kg)        = 13455.3           Geometric Albedo =  0.2 
+  GM (km^3/s^2)          = 8978.13  +-  0.06  V(1,0)          = -1.2 
 
-  GM (km^3/s^2)         = 5,793,966       GM 1-sigma( km^3/s^2)  = +-23
-  Equ. grav, ge (m/s^2) =  8.87           Pol. grav, gp (m/s^2)  =  9.19+-0.02
-
-  Geometric albedo      =  0.51           Visual magnitude V(1,0)= -7.19
-  Vis. mag. (opposition)= +5.52           Obliquity to orbit     = 97.86 deg
-  Sidereal orbit period = 84.016846 yr    Sidereal orbit period  = 30687.153 d
-  Mean daily motion     = 0.01176904 dg/d Mean orbit velocity    =  6.8352 km/s
-
-  Atmos. temp. (1 bar)  =  76+-2 K        Heat flow/mass (x10^7) = 
-  Planetary Solar Const =   3.71 W/m^2    Dipole tilt/offset     = 58.6dg/0.3Rp 
-  Escape velocity (km/s)=  21.3           Mag.dip.mom(gauss-Rp^3)= 0.23
-  Aroche(ice)/Rp        =  2.20           Hill's sphere rad., Rp = 2700
+ SATELLITE ORBITAL DATA:
+  Semi-major axis, a (km)= 1221.87 (10^3)  Orbital period     = 15.945421 d
+  Eccentricity, e        = 0.0288          Rotational period  = 
+  Inclination, i  (deg)  = 0.28
 *******************************************************************************
  
  
 *******************************************************************************
-Ephemeris / WWW_USER Mon May 21 20:34:14 2018 Pasadena, USA      / Horizons    
+Ephemeris / WWW_USER Tue May 22 13:29:56 2018 Pasadena, USA      / Horizons    
 *******************************************************************************
-Target body name: Uranus (799)                    {source: ura111}
+Target body name: Titan (606)                     {source: sat389}
 Center body name: Solar System Barycenter (0)     {source: DE431mx}
 Center-site name: BODY CENTER
 *******************************************************************************
@@ -53,11 +41,11 @@ JDTDB
 *******************************************************************************
 $$SOE
 2458259.500000000 = A.D. 2018-May-21 00:00:00.0000 TDB 
- X = 2.612286900848470E+09 Y = 1.424799295124570E+09 Z =-2.855079125954556E+07
- VX=-3.310598966061383E+00 VY= 5.661054216699966E+00 VZ= 6.381301803660566E-02
+ X = 1.162232804685056E+08 Y =-1.499818822800905E+09 Z = 2.141316344228357E+07
+ VX= 8.274781827225510E+00 VY=-4.000467095424410E+00 VZ= 2.141629100676498E+00
 2458260.500000000 = A.D. 2018-May-22 00:00:00.0000 TDB 
- X = 2.612000808080219E+09 Y = 1.425288384096400E+09 Z =-2.854528488995403E+07
- VX=-3.311975017070207E+00 VY= 5.660469931284394E+00 VZ= 6.370968085353557E-02
+ X = 1.170272688661329E+08 Y =-1.500170439821398E+09 Z = 2.159254063468486E+07
+ VX= 1.033450632612351E+01 VY=-4.024006581579225E+00 VZ= 1.951602344349848E+00
 $$EOE
 *******************************************************************************
 Coordinate system description:

@@ -25,20 +25,20 @@
  
  
 *******************************************************************************
-Ephemeris / WWW_USER Sun May  6 19:13:35 2018 Pasadena, USA      / Horizons    
+Ephemeris / WWW_USER Mon May 21 20:33:50 2018 Pasadena, USA      / Horizons    
 *******************************************************************************
 Target body name: Mars (499)                      {source: mar097}
 Center body name: Solar System Barycenter (0)     {source: DE431mx}
 Center-site name: BODY CENTER
 *******************************************************************************
-Start time      : A.D. 2018-May-06 00:00:00.0000 TDB
-Stop  time      : A.D. 2018-May-07 00:00:00.0000 TDB
+Start time      : A.D. 2018-May-21 00:00:00.0000 TDB
+Stop  time      : A.D. 2018-May-22 00:00:00.0000 TDB
 Step-size       : 1440 minutes
 *******************************************************************************
 Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
 Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
 Center radii    : (undefined)                                                  
-Output units    : AU-D                                                         
+Output units    : KM-S                                                         
 Output type     : GEOMETRIC cartesian states
 Output format   : 2 (position and velocity)
 Reference frame : ICRF/J2000.0                                                 
@@ -49,12 +49,12 @@ JDTDB
    VX    VY    VZ
 *******************************************************************************
 $$SOE
-2458244.500000000 = A.D. 2018-May-06 00:00:00.0000 TDB 
- X =-3.642349239002156E-01 Y =-1.434742839188999E+00 Z =-2.134063111921957E-02
- VX= 1.408581493607229E-02 VY=-2.232272831872577E-03 VZ=-3.925293249185936E-04
-2458245.500000000 = A.D. 2018-May-07 00:00:00.0000 TDB 
- X =-3.501328822766506E-01 Y =-1.436910184547108E+00 Z =-2.173219801258547E-02
- VX= 1.411807047778056E-02 VY=-2.102329011226972E-03 VZ=-3.905977596890166E-04
+2458259.500000000 = A.D. 2018-May-21 00:00:00.0000 TDB 
+ X =-2.243022768356023E+07 Y =-2.174192284265910E+08 Z =-4.037775125229746E+06
+ VX= 2.500287369123868E+01 VY=-4.026765733596023E-01 VZ=-6.221543319464095E-01
+2458260.500000000 = A.D. 2018-May-22 00:00:00.0000 TDB 
+ X =-2.026895807402556E+07 Y =-2.174437984135403E+08 Z =-4.091340125568643E+06
+ VX= 2.502613478365726E+01 VY=-1.659684710636410E-01 VZ=-6.177647236726105E-01
 $$EOE
 *******************************************************************************
 Coordinate system description:
@@ -69,15 +69,15 @@ Coordinate system description:
     Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
               of Earth's north pole at the reference epoch.
 
-  Symbol meaning [1 au= 149597870.700 km, 1 day= 86400.0 s]:
+  Symbol meaning:
 
     JDTDB    Julian Day Number, Barycentric Dynamical Time
-      X      X-component of position vector (au)                               
-      Y      Y-component of position vector (au)                               
-      Z      Z-component of position vector (au)                               
-      VX     X-component of velocity vector (au/day)                           
-      VY     Y-component of velocity vector (au/day)                           
-      VZ     Z-component of velocity vector (au/day)                           
+      X      X-component of position vector (km)                               
+      Y      Y-component of position vector (km)                               
+      Z      Z-component of position vector (km)                               
+      VX     X-component of velocity vector (km/sec)                           
+      VY     Y-component of velocity vector (km/sec)                           
+      VZ     Z-component of velocity vector (km/sec)                           
 
 Geometric states/elements have no aberrations applied.
 
@@ -91,4 +91,3 @@ Geometric states/elements have no aberrations applied.
                   telnet ssd.jpl.nasa.gov 6775    (via command-line)
      Author     : Jon.D.Giorgini@jpl.nasa.gov
 *******************************************************************************
- 

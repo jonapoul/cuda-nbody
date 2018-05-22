@@ -1,35 +1,35 @@
 *******************************************************************************
- Revised: Mar 27, 2009             Triton / (Neptune)                       801
+ Revised: Jun 17, 2016            Rhea  / (Saturn)                          605
+                        http://ssd.jpl.nasa.gov/?sat_phys_par
+                         http://ssd.jpl.nasa.gov/?sat_elem
 
  SATELLITE PHYSICAL PROPERTIES:
-  Radius (km)             = 1352.6 +- 2.4   Density (g cm^-3)   = 2.054 +-0.032
-  Mass (10^20 kg )        =  214.7 +- 0.7   Geometric Albedo    =  0.7  
-                                            V(1,0)              = -1.24
+  Mean Radius (km)        = 764.5  +- 2     Density (g/cm^3)  =  1.233 +- 0.010
+  Mass (10^19 kg)         = 230.9           Geometric Albedo  =  0.6
+  GM (km^3/s^2)           = 153.94 +- 0.16  V(1,0)            = +0.1
 
- SATELLITE ORBITAL DATA:
-  Semi-major axis, a (km) = 354.76(10^3)    Orbital period      = 5.876854 d (R)
-  Eccentricity, e         =                 Rotational period   = Synchronous
-  Inclination, i  (deg)   = 156.834
-
- Fit to all reported measurements through 2008, as described in AJ (2009).
+ SATELLITE ORBITAL DATA (mean values referred to local Laplace plane):
+  Semi-major axis, a (km) = 527.07(10^3)    Orbital period    = 4.518 d
+  Eccentricity, e         = 0.001           Rotational period = Synchronous
+  Inclination, i  (deg)   = 0.331
 *******************************************************************************
  
  
 *******************************************************************************
-Ephemeris / WWW_USER Sun May  6 19:20:29 2018 Pasadena, USA      / Horizons    
+Ephemeris / WWW_USER Tue May 22 13:30:32 2018 Pasadena, USA      / Horizons    
 *******************************************************************************
-Target body name: Triton (801)                    {source: nep081xl}
+Target body name: Rhea (605)                      {source: sat389}
 Center body name: Solar System Barycenter (0)     {source: DE431mx}
 Center-site name: BODY CENTER
 *******************************************************************************
-Start time      : A.D. 2018-May-06 00:00:00.0000 TDB
-Stop  time      : A.D. 2018-May-07 00:00:00.0000 TDB
+Start time      : A.D. 2018-May-21 00:00:00.0000 TDB
+Stop  time      : A.D. 2018-May-22 00:00:00.0000 TDB
 Step-size       : 1440 minutes
 *******************************************************************************
 Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
 Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
 Center radii    : (undefined)                                                  
-Output units    : AU-D                                                         
+Output units    : KM-S                                                         
 Output type     : GEOMETRIC cartesian states
 Output format   : 2 (position and velocity)
 Reference frame : ICRF/J2000.0                                                 
@@ -40,12 +40,12 @@ JDTDB
    VX    VY    VZ
 *******************************************************************************
 $$SOE
-2458244.500000000 = A.D. 2018-May-06 00:00:00.0000 TDB 
- X = 2.878764011681240E+01 Y =-8.212114128014058E+00 Z =-4.926119093974720E-01
- VX= 2.332545903769841E-03 VY= 4.989852667626858E-03 VZ= 5.397554690448495E-04
-2458245.500000000 = A.D. 2018-May-07 00:00:00.0000 TDB 
- X = 2.879048265133912E+01 Y =-8.207783374427471E+00 Z =-4.930861371655810E-01
- VX= 2.963566230936546E-03 VY= 3.420431221617548E-03 VZ=-1.412005071923980E-03
+2458259.500000000 = A.D. 2018-May-21 00:00:00.0000 TDB 
+ X = 1.177353180292324E+08 Y =-1.500451361330361E+09 Z = 2.159306467348188E+07
+ VX= 1.629865509940339E+01 VY= 4.415935222549017E+00 VZ=-2.949773615352496E+00
+2458260.500000000 = A.D. 2018-May-22 00:00:00.0000 TDB 
+ X = 1.187341992887754E+08 Y =-1.499827507488500E+09 Z = 2.124959131937575E+07
+ VX= 6.000851912951668E+00 VY= 7.855302756976378E+00 VZ=-3.798114210821820E+00
 $$EOE
 *******************************************************************************
 Coordinate system description:
@@ -60,15 +60,15 @@ Coordinate system description:
     Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
               of Earth's north pole at the reference epoch.
 
-  Symbol meaning [1 au= 149597870.700 km, 1 day= 86400.0 s]:
+  Symbol meaning:
 
     JDTDB    Julian Day Number, Barycentric Dynamical Time
-      X      X-component of position vector (au)                               
-      Y      Y-component of position vector (au)                               
-      Z      Z-component of position vector (au)                               
-      VX     X-component of velocity vector (au/day)                           
-      VY     Y-component of velocity vector (au/day)                           
-      VZ     Z-component of velocity vector (au/day)                           
+      X      X-component of position vector (km)                               
+      Y      Y-component of position vector (km)                               
+      Z      Z-component of position vector (km)                               
+      VX     X-component of velocity vector (km/sec)                           
+      VY     Y-component of velocity vector (km/sec)                           
+      VZ     Z-component of velocity vector (km/sec)                           
 
 Geometric states/elements have no aberrations applied.
 
@@ -82,4 +82,3 @@ Geometric states/elements have no aberrations applied.
                   telnet ssd.jpl.nasa.gov 6775    (via command-line)
      Author     : Jon.D.Giorgini@jpl.nasa.gov
 *******************************************************************************
- 

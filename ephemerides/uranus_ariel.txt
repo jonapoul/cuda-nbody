@@ -1,36 +1,22 @@
 *******************************************************************************
- Revised: Jun 17, 2016                Uranus                                799
- 
- PHYSICAL DATA (updated 2009-May-26):
-  Mass (10^24 kg)       =    86.8103      Density (g/cm^3)       =  1.318
-  Equat. radius (1 bar) = 25559+-4 km     Polar radius (km)      = 24973+-20
-  Volumetric mean radius= 25362+-12 km    Flattening             =  0.02293
+ Revised: Jun 17, 2016             Ariel  / (Uranus)                        701
 
-  Rotation period       = 17.24+-0.01 hr  Rot. rate(10^-4 rad/s) =  1.012   
-  m = w^2a^3/GM         =  0.02954        Hydrostatic flat., fh  =  0.01987
-  Inferred rot. period  = 17.14+-0.9 hr   ks = 3*J2/m            =  0.357
-  Mom. of inert. I/MRo^2=  0.225          I/MRo^2 (upper bound)  =  0.232 
-  Rocky core mass (Mc/M)=  0.0012         Y factor (He/H ratio)  =  0.262+-.048
+ SATELLITE PHYSICAL PROPERTIES:
+  Radius (km)           = 581.1x577.9x577.7 Density (g cm^-3)   = 1.67 +- 0.15
+  Mass (10^20 kg )      =   13.53 +- 1.20   Geometric Albedo    =  0.34 
+                                            V(1,0)              = +1.45
 
-  GM (km^3/s^2)         = 5,793,966       GM 1-sigma( km^3/s^2)  = +-23
-  Equ. grav, ge (m/s^2) =  8.87           Pol. grav, gp (m/s^2)  =  9.19+-0.02
-
-  Geometric albedo      =  0.51           Visual magnitude V(1,0)= -7.19
-  Vis. mag. (opposition)= +5.52           Obliquity to orbit     = 97.86 deg
-  Sidereal orbit period = 84.016846 yr    Sidereal orbit period  = 30687.153 d
-  Mean daily motion     = 0.01176904 dg/d Mean orbit velocity    =  6.8352 km/s
-
-  Atmos. temp. (1 bar)  =  76+-2 K        Heat flow/mass (x10^7) = 
-  Planetary Solar Const =   3.71 W/m^2    Dipole tilt/offset     = 58.6dg/0.3Rp 
-  Escape velocity (km/s)=  21.3           Mag.dip.mom(gauss-Rp^3)= 0.23
-  Aroche(ice)/Rp        =  2.20           Hill's sphere rad., Rp = 2700
+ SATELLITE ORBITAL DATA:
+  Semi-major axis, a (km) = 191.2 (10^3)    Orbital period      = 2.520 d
+  Eccentricity, e         =   0.0034        Rotational period   = Synchronous
+  Inclination, i  (deg)   =   0.31
 *******************************************************************************
  
  
 *******************************************************************************
-Ephemeris / WWW_USER Mon May 21 20:34:14 2018 Pasadena, USA      / Horizons    
+Ephemeris / WWW_USER Tue May 22 15:44:37 2018 Pasadena, USA      / Horizons    
 *******************************************************************************
-Target body name: Uranus (799)                    {source: ura111}
+Target body name: Ariel (701)                     {source: ura111}
 Center body name: Solar System Barycenter (0)     {source: DE431mx}
 Center-site name: BODY CENTER
 *******************************************************************************
@@ -53,11 +39,11 @@ JDTDB
 *******************************************************************************
 $$SOE
 2458259.500000000 = A.D. 2018-May-21 00:00:00.0000 TDB 
- X = 2.612286900848470E+09 Y = 1.424799295124570E+09 Z =-2.855079125954556E+07
- VX=-3.310598966061383E+00 VY= 5.661054216699966E+00 VZ= 6.381301803660566E-02
+ X = 2.612407551792584E+09 Y = 1.424753400353707E+09 Z =-2.869138249417907E+07
+ VX=-7.415392188939403E+00 VY= 6.054038172218810E+00 VZ=-3.592106684257819E+00
 2458260.500000000 = A.D. 2018-May-22 00:00:00.0000 TDB 
- X = 2.612000808080219E+09 Y = 1.425288384096400E+09 Z =-2.854528488995403E+07
- VX=-3.311975017070207E+00 VY= 5.660469931284394E+00 VZ= 6.370968085353557E-02
+ X = 2.611818477501120E+09 Y = 1.425333209385325E+09 Z =-2.851000171041334E+07
+ VX=-2.152649944808182E+00 VY= 6.148636250224474E+00 VZ= 5.423668362039667E+00
 $$EOE
 *******************************************************************************
 Coordinate system description:

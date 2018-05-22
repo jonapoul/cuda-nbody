@@ -1,33 +1,32 @@
 *******************************************************************************
- Revised: Jun 17, 2016             Titania / (Uranus)                       703
+ Revised: Jun 17, 2016             Io  / (Jupiter)                          501
 
  SATELLITE PHYSICAL PROPERTIES:
-  Radius (km)           = 788.9  +- 1.8     Density (g cm^-3)   =  1.71 +- 0.05
-  Mass (10^20 kg )      =  35.27 +- 0.90    Geometric Albedo    =  0.27 
-                                            V(1,0)              = +1.02
+  Radius (km)             = 1821.3 +- 0.2   Density (g cm^-3)   =  3.530 +-.006
+  Mass (10^20 kg )        =  893.3 +- 1.5   Geometric Albedo    =  0.6  
 
  SATELLITE ORBITAL DATA:
-  Semi-major axis, a (km) = 435.8 (10^3)    Orbital period      = 8.706 d
-  Eccentricity, e         =   0.0022        Rotational period   = Synchronous
-  Inclination, i  (deg)   =   0.10
+  Semi-major axis, a (km) = 421.769 (10^3)  Orbital period      = 1.769138 d
+  Eccentricity, e         = 0.0041          Rotational period   = Synchronous
+  Inclination, i  (deg)   = 0.036
 *******************************************************************************
  
  
 *******************************************************************************
-Ephemeris / WWW_USER Sun May  6 19:20:41 2018 Pasadena, USA      / Horizons    
+Ephemeris / WWW_USER Tue May 22 08:33:09 2018 Pasadena, USA      / Horizons    
 *******************************************************************************
-Target body name: Titania (703)                   {source: ura111}
+Target body name: Io (501)                        {source: jup310}
 Center body name: Solar System Barycenter (0)     {source: DE431mx}
 Center-site name: BODY CENTER
 *******************************************************************************
-Start time      : A.D. 2018-May-06 00:00:00.0000 TDB
-Stop  time      : A.D. 2018-May-07 00:00:00.0000 TDB
+Start time      : A.D. 2018-May-21 00:00:00.0000 TDB
+Stop  time      : A.D. 2018-May-22 00:00:00.0000 TDB
 Step-size       : 1440 minutes
 *******************************************************************************
 Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
 Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
 Center radii    : (undefined)                                                  
-Output units    : AU-D                                                         
+Output units    : KM-S                                                         
 Output type     : GEOMETRIC cartesian states
 Output format   : 2 (position and velocity)
 Reference frame : ICRF/J2000.0                                                 
@@ -38,12 +37,12 @@ JDTDB
    VX    VY    VZ
 *******************************************************************************
 $$SOE
-2458244.500000000 = A.D. 2018-May-06 00:00:00.0000 TDB 
- X = 1.749173394631557E+01 Y = 9.475256840687880E+00 Z =-1.886906792969362E-01
- VX= 3.130089747423567E-06 VY= 2.755664783037321E-03 VZ=-6.861473465303138E-04
-2458245.500000000 = A.D. 2018-May-07 00:00:00.0000 TDB 
- X = 1.749131023234489E+01 Y = 9.478019974188758E+00 Z =-1.899910146763667E-01
- VX=-9.802029786348154E-04 VY= 2.815365328105659E-03 VZ=-1.797926300212313E-03
+2458259.500000000 = A.D. 2018-May-21 00:00:00.0000 TDB 
+ X =-5.305428222683530E+08 Y =-6.093101203476206E+08 Z = 1.439150010670224E+07
+ VX=-2.994815145929035E-01 VY=-2.217680265484483E+01 VZ=-8.368258324023969E-01
+2458260.500000000 = A.D. 2018-May-22 00:00:00.0000 TDB 
+ X =-5.289461940095785E+08 Y =-6.103260275988427E+08 Z = 1.437439571731767E+07
+ VX= 1.326996770771350E+01 VY= 8.966911083810633E+00 VZ= 4.742516911648953E-01
 $$EOE
 *******************************************************************************
 Coordinate system description:
@@ -58,15 +57,15 @@ Coordinate system description:
     Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
               of Earth's north pole at the reference epoch.
 
-  Symbol meaning [1 au= 149597870.700 km, 1 day= 86400.0 s]:
+  Symbol meaning:
 
     JDTDB    Julian Day Number, Barycentric Dynamical Time
-      X      X-component of position vector (au)                               
-      Y      Y-component of position vector (au)                               
-      Z      Z-component of position vector (au)                               
-      VX     X-component of velocity vector (au/day)                           
-      VY     Y-component of velocity vector (au/day)                           
-      VZ     Z-component of velocity vector (au/day)                           
+      X      X-component of position vector (km)                               
+      Y      Y-component of position vector (km)                               
+      Z      Z-component of position vector (km)                               
+      VX     X-component of velocity vector (km/sec)                           
+      VY     Y-component of velocity vector (km/sec)                           
+      VZ     Z-component of velocity vector (km/sec)                           
 
 Geometric states/elements have no aberrations applied.
 
@@ -80,4 +79,3 @@ Geometric states/elements have no aberrations applied.
                   telnet ssd.jpl.nasa.gov 6775    (via command-line)
      Author     : Jon.D.Giorgini@jpl.nasa.gov
 *******************************************************************************
- 
