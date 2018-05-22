@@ -1,0 +1,4 @@
+
+Timestep     1 # days
+EndTime    100 # days
+Particles  All
