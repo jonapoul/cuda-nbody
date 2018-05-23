@@ -31,16 +31,19 @@ Constants::Constants(string const& filename,
 }
 
 void Constants::Print() const {
-   tee << "c    = " << c << '\n';
-   tee << "e    = " << e << '\n';
-   tee << "G    = " << G << '\n';
-   tee << "h    = " << h << '\n';
-   tee << "hbar = " << hbar << '\n';
-   tee << "k_b  = " << k_b << '\n';
-   tee << "m_e  = " << m_e << '\n';
-   tee << "m_p  = " << m_p << '\n';
-   tee << "\u03B5_0  = " << epsilon_0 << '\n';
-   tee << "\u03BC_0  = " << mu_0 << '\n';
+   tee << "Constants:\n";
+   string const indent(CNB_INDENT, ' ');
+   tee << indent << "c    = " << c << '\n';
+   tee << indent << "e    = " << e << '\n';
+   tee << indent << "G    = " << G << '\n';
+   tee << indent << "h    = " << h << '\n';
+   tee << indent << "hbar = " << hbar << '\n';
+   tee << indent << "k_b  = " << k_b << '\n';
+   tee << indent << "m_e  = " << m_e << '\n';
+   tee << indent << "m_p  = " << m_p << '\n';
+   tee << indent << "\u03B5_0  = " << epsilon_0 << '\n';
+   tee << indent << "\u03BC_0  = " << mu_0 << '\n';
+   tee << flush;
 }
 
 void Constants::ReadFromFile(std::string const& filename) {

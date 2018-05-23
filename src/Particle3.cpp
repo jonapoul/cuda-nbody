@@ -14,6 +14,7 @@ namespace fs = boost::filesystem;
 #include "Particle3.h"
 #include "Simulation.h"
 #include "TeeStream.h"
+#include "OtherFunctions.h"
 
 using namespace cnb;
 
@@ -237,13 +238,9 @@ Particle3& Particle3::operator=(Particle3 const& p) {
 namespace cnb {
 
 ostream& operator<<(ostream& os, Particle3 const& p) {
-   size_t const bufsize = p.sim->LongestParticleName;
-   if (p.Name().length() < bufsize) {
-      os << string(bufsize-p.Name().length(), ' ');
-   }
-   os << p.Name() << ' ';
-   os << "pos=" << p.Position() << ' ';
-   os << "vel=" << p.Velocity() << ' ';
+   os << padded(p.Name(), p.sim->LongestParticleName, ALIGN_LEFT) << ' ';
+   os << "pos=(" << p.Position() << ") ";
+   os << "vel=(" << p.Velocity() << ") ";
 
    char buf[64];
    snprintf(buf, 64, "mass=%.2e radius=%.2e", p.Mass(), p.Radius());

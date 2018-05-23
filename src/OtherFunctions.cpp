@@ -1,3 +1,6 @@
+#include <string>
+using namespace std;
+
 #include "Config.h"
 #include "OtherFunctions.h"
 #include "TeeStream.h"
@@ -27,6 +30,23 @@ void check_range_impl(cnb_float const x,
       terr << "'" << str << "' is out of range\n";
       exit(1);
    }
+}
+
+string padded(string const& input,
+              size_t const size,
+              TextAlignment const align) {
+   if (size <= input.length()) {
+      return input;
+   }
+   string const gap(size - input.length(), ' ');
+   switch (align) {
+      case ALIGN_LEFT:  return input + gap;
+      case ALIGN_MID:   return string(size/2,' ') + input + string(size-size/2, ' ');
+      case ALIGN_RIGHT: return gap + input;
+   }
+   terr << "Unknown text alignment\n";
+   exit(1);
+   return "";
 }
 
 }

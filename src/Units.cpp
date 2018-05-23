@@ -5,7 +5,9 @@
 using namespace std;
 
 #include "Units.h"
+#include "Config.h"
 #include "TeeStream.h"
+#include "OtherFunctions.h"
 using namespace cnb;
 
 extern "C" {
@@ -112,6 +114,7 @@ Units::Units(string const& filename) {
       exit(1);
    }
 
+   this->Print();
 }
 
 /* Match up each of the read-in units to the static arrays of possible units */
@@ -119,45 +122,36 @@ bool Units::Identify() {
    for (auto t : all_time) {
       if (time.name == t.name) {
          time.val = t.val;
-         tee << "Time units:     " << time.name << '\n';
          break;
       }
    }
-   if (time.val < 0) return false;
-
    for (auto l : all_length) {
       if (length.name == l.name) {
          length.val = l.val;
-         tee << "Distance units: " << length.name << '\n';
          break;
       }
    }
-   if (length.val < 0) return false;
-
    for (auto m : all_mass) {
       if (mass.name == m.name) {
          mass.val = m.val;
-         tee << "Mass units:     " << mass.name << '\n';
          break;
       }
    }
-   if (mass.val < 0) return false;
-
    for (auto c : all_charge) {
       if (charge.name == c.name) {
          charge.val = c.val;
-         tee << "Charge units:   " << charge.name << '\n';
          break;
       }
    }
-   if (charge.val < 0) return false;
-
-   return true;
+   return (time.val > 0 || length.val > 0 || mass.val > 0 || charge.val > 0);
 }
 
 void Units::Print() {
-   tee << "Base time Units:   " << time.name << " = " << time.val << " s\n";
-   tee << "Base Length Units: " << length.name << " = " << length.val << " s\n";
-   tee << "Base Mass Units:   " << mass.name << " = " << mass.val << " s\n";
-   tee << "Base Charge Units: " << charge.name << " = " << charge.val << " s\n";
+   tee << "Units:\n";
+   string const indent(CNB_INDENT, ' ');
+   tee << indent << "Time:   " << padded(time.name,   4, ALIGN_LEFT) << " = " << time.val << " s\n";
+   tee << indent << "Length: " << padded(length.name, 4, ALIGN_LEFT) << " = " << length.val << " m\n";
+   tee << indent << "Mass:   " << padded(mass.name,   4, ALIGN_LEFT) << " = " << mass.val << " kg\n";
+   tee << indent << "Charge: " << padded(charge.name, 4, ALIGN_LEFT) << " = " << charge.val << " C\n";
+   tee << flush;
 }

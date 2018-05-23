@@ -4,30 +4,69 @@
 #include <streambuf>
 #include <fstream>
 #include <string>
-#include <vector>
+#include <iostream>
 
 namespace cnb {
 
-/* From https://stackoverflow.com/a/1761027 */
-class TeeStream : public std::ostream {
-public: 
-   TeeStream();
-   void LinkStream(std::ostream& out);
-   std::string GenerateFilename() const;
+/* Adapted from http://wordaligned.org/articles/cpp-streambufs */
+template <typename char_type, typename traits = std::char_traits<char_type> >
+class Basic_TeeBuf: public std::basic_streambuf<char_type, traits> {
+public:
+   typedef typename traits::int_type int_type;
+
+   Basic_TeeBuf(std::basic_streambuf<char_type, traits> * buf1,
+                std::basic_streambuf<char_type, traits> * buf2)
+            : sb1(buf1), sb2(buf2) { std::cout << "teebuf\n"; }
 
 private:
-   struct DebugBuffer : public std::streambuf {
-      void AddBuffer(std::streambuf * buf);
-      virtual int overflow(int c);
-      std::vector<std::streambuf *> bufs;
-   };
-   DebugBuffer stream;
-   std::ofstream file;
+   virtual int sync() {
+      int const r1 = sb1->pubsync();
+      int const r2 = sb2->pubsync();
+      return r1 == 0 && r2 == 0 ? 0 : -1;
+   }
+
+   virtual int_type overflow(int_type c) {
+      int_type const eof = traits::eof();
+      if (traits::eq_int_type(c, eof)) {
+         return traits::not_eof(c);
+      } else {
+         char_type const ch = traits::to_char_type(c);
+         int_type const r1 = sb1->sputc(ch);
+         int_type const r2 = sb2->sputc(ch);
+         return traits::eq_int_type(r1, eof) ||
+                traits::eq_int_type(r2, eof) ? eof : c;
+      }
+   }
+
+private:
+   std::basic_streambuf<char_type, traits> * sb1;
+   std::basic_streambuf<char_type, traits> * sb2;
+};
+typedef Basic_TeeBuf<char> TeeBuf;
+
+class TeeStream : public std::ostream {
+public:
+   TeeStream() : std::ostream(&tbuf),
+                 log(GenerateFilename()),
+                 tbuf(std::cout.rdbuf(), log.rdbuf()) { std::cout << "teestream\n"; }
+
+   std::string GenerateFilename() const {
+      time_t rawtime;
+      struct tm * timeinfo;
+      char buffer[32];
+      time(&rawtime);
+      timeinfo = localtime(&rawtime);
+      strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", timeinfo);
+      return "logs/" + std::string(buffer) + ".log";
+   }
+private:
+   std::ofstream log;
+   TeeBuf tbuf;
 };
 
 } // namespace cnb
 
-/* Allocated in src/main.cpp */
+/* Allocated in src/TeeStream.cpp */
 extern cnb::TeeStream tee;
 
 #define terr tee << __FUNCTION__ << " " << __LINE__ << ": "

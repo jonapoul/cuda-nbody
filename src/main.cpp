@@ -12,6 +12,7 @@ int main() {
    Simulation sim(&units, &constants);
    sim.ReadParticlesFromDirectory("eph");
    sim.ReadParameters("params/Simulation.param");
+   return 0;
    sim.CalculateInitialForces();
    sim.DetermineOrbitalCentres();
    sim.OpenTrajectoryFile("traj");

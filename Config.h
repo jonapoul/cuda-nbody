@@ -5,6 +5,7 @@
 #define CNB_DEBUG
 #define CNB_FLOAT
 #define CNB_EPSILON 1e-5  /* fractional difference to define numerical equality */
+#define CNB_INDENT     5  /* number of spaces */
 
 #ifdef CNB_DEBUG
 # define DEBUG_PRINT(x) tee<<#x<<" = '"<<x<<"'\n";

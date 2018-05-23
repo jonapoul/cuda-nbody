@@ -23,6 +23,7 @@ Simulation::Simulation(Units * u,
 
 Simulation::~Simulation() {
    traj.close();
+   tee << flush;
 }
 
 size_t Simulation::NumParticles() const {
@@ -123,10 +124,12 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       return p1.Mass() > p2.Mass();
    };
    sort(particles.begin(), particles.end(), SortParticles);
+   string const indent(CNB_INDENT, ' ');
+   tee << "Particles:\n";
    for (auto& p : particles) {
-      tee << p << '\n';
+      tee << indent << p << '\n';
    }
-   tee << NumParticles() << "/" << FileCount << " ephemerides read in.\n";
+   tee << flush;
 }
 
 void Simulation::UpdatePositions() {
