@@ -20,7 +20,7 @@ using namespace cnb;
 
 Particle3::Particle3(Simulation * s) 
    : position({}), velocity({}), mass(0.0),
-     radius(0.0), name(""), sim(s), centre(nullptr) { }
+     radius(0.0), name(""), sim(s), centre(this) { }
 
 Particle3::Particle3(Particle3 const& p) {
   this->position = p.position;
@@ -251,21 +251,21 @@ Particle3& Particle3::operator=(Particle3 const& p) {
 namespace cnb {
 
 ostream& operator<<(ostream& os, Particle3 const& p) {
-   Units const * const u = p.sim->units;
-   string indent(CNB_INDENT, ' ');
-   auto gap = indent.c_str();
+   string const l = p.sim->units->length.name;
+   string const t = p.sim->units->time.name;
+   string const m = p.sim->units->mass.name;
    char buf[512];
    snprintf(buf, 512,
-            "%sName      = %s\n"
-            "%s Distance = %.2e %s\n"
-            "%s Velocity = %.2e %s/%s\n"
-            "%s Mass     = %.2e %s\n"
-            "%s Radius   = %.2e %s",
-            gap, p.Name().c_str(),
-            gap, p.Position().Magnitude(), u->length.name.c_str(),
-            gap, p.Velocity().Magnitude(), u->length.name.c_str(), u->time.name.c_str(),
-            gap, p.Mass(),                 u->mass.name.c_str(),
-            gap, p.Radius(),               u->length.name.c_str());
+            "Name = %s  "
+            "Distance = %.2e %s  "
+            "Velocity = %.2e %s/%s  "
+            "Mass = %.2e %s  "
+            "Radius = %.2e %s",
+            padded(p.Name(), p.sim->LongestParticleName).c_str(),
+            p.Position().Magnitude(), l.c_str(),
+            p.Velocity().Magnitude(), l.c_str(), t.c_str(),
+            p.Mass(),                 m.c_str(),
+            p.Radius(),               l.c_str());
    return os << buf;
 }
 

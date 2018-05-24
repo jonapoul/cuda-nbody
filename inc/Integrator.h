@@ -14,6 +14,6 @@ private:
    int x;
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 #endif

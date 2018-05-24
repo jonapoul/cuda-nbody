@@ -36,17 +36,16 @@ void Constants::Print() const {
    string const l = units->length.name;
    string const m = units->mass.name;
    string const q = units->charge.name;
-   string const indent(CNB_INDENT, ' ');
-   tee << indent << "c    = " << c << ' '<< l << ' ' << t << "^-1\n";
-   tee << indent << "e    = " << e << ' '<< q << '\n';
-   tee << indent << "G    = " << G << ' ' << l << "^3 " << t << "^-2 " << m << "^-1\n";
-   tee << indent << "h    = " << h << ' ' << l << "^2 " << m << " " << t << "^-1\n";
-   tee << indent << "hbar = " << hbar << ' ' << l << "^2 " << m << " " << t << "^-1\n";
-   tee << indent << "k_b  = " << k_b << ' ' << l << "^2 " << m << " " << t << "^-2\n";
-   tee << indent << "m_e  = " << m_e << ' ' << m << '\n';
-   tee << indent << "m_p  = " << m_p << ' ' << m << '\n';
-   tee << indent << "\u03B5_0  = " << epsilon_0 << ' ' << q << "^2 " << t << "^2 " << m << "^-1 " << l << "^3\n";
-   tee << indent << "\u03BC_0  = " << mu_0 << ' ' << m << ' ' << l << ' ' << q << "^-2\n"; 
+   tee << CNB_INDENT << "c    = " << c << ' '<< l << ' ' << t << "^-1\n";
+   tee << CNB_INDENT << "e    = " << e << ' '<< q << '\n';
+   tee << CNB_INDENT << "G    = " << G << ' ' << l << "^3 " << t << "^-2 " << m << "^-1\n";
+   tee << CNB_INDENT << "h    = " << h << ' ' << l << "^2 " << m << " " << t << "^-1\n";
+   tee << CNB_INDENT << "hbar = " << hbar << ' ' << l << "^2 " << m << " " << t << "^-1\n";
+   tee << CNB_INDENT << "k_b  = " << k_b << ' ' << l << "^2 " << m << " " << t << "^-2\n";
+   tee << CNB_INDENT << "m_e  = " << m_e << ' ' << m << '\n';
+   tee << CNB_INDENT << "m_p  = " << m_p << ' ' << m << '\n';
+   tee << CNB_INDENT << "\u03B5_0  = " << epsilon_0 << ' ' << q << "^2 " << t << "^2 " << m << "^-1 " << l << "^3\n";
+   tee << CNB_INDENT << "\u03BC_0  = " << mu_0 << ' ' << m << ' ' << l << ' ' << q << "^-2\n"; 
    tee << flush;
 }
 

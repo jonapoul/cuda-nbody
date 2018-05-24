@@ -28,6 +28,7 @@ public:
    void UpdateVelocities();
    void UpdateForces();
    void DetermineOrbitalCentres();
+   void PrintParticles() const;
    void PrintToTrajectoryFile(size_t const timestep);
 
    size_t LongestParticleName = 0;
@@ -43,6 +44,6 @@ private:
    size_t allowed_particle_count;
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 #endif

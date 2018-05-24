@@ -86,15 +86,14 @@ void Simulation::ReadParameters(std::string const& filename) {
    t_max *= (Units::get(TIME, "day") / units->time.val);
 
    /* Print results */
-   string const indent(CNB_INDENT, ' ');
    tee << "Parameters:\n";
-   tee << indent << "Timestep  = " << dt << " " << units->time.name << '\n';
-   tee << indent << "EndTime   = " << t_max << " " << units->time.name << '\n';
+   tee << CNB_INDENT << "Timestep  = " << dt << " " << units->time.name << '\n';
+   tee << CNB_INDENT << "EndTime   = " << t_max << " " << units->time.name << '\n';
    if (string(count) != "All") {
       allowed_particle_count = stoi(count);
-      tee << indent << "Particles = " << allowed_particle_count << '\n';
+      tee << CNB_INDENT << "Particles = " << allowed_particle_count << '\n';
    } else {
-      tee << indent << "Particles = All\n";
+      tee << CNB_INDENT << "Particles = All\n";
    }
    tee << flush;
 }
@@ -110,7 +109,7 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       Particle3 p(this);
       string const path_string = file.path().string();
       if ( p.ReadFromFile(path_string) ) {
-         LongestParticleName = MAX( p.Name().length(), LongestParticleName );
+         LongestParticleName = CNB_MAX( p.Name().length(), LongestParticleName );
          particles.push_back(p);
       } else {
          terr << "Failed reading '" << path_string << "'\n";
@@ -126,12 +125,6 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       particles = vector<Particle3>(particles.begin(),
                                     particles.begin()+allowed_particle_count);
    }
-   tee << "Particles:\n";
-   for (size_t i = 0; i < particles.size(); i++) {
-      tee << i+1 << '/' << particles.size() << '\n';
-      tee << particles[i] << '\n';
-   }
-   tee << flush;
 }
 
 void Simulation::UpdatePositions() {
@@ -167,7 +160,6 @@ void Simulation::DetermineOrbitalCentres() {
       }
       /* No orbit centre if so */
       if (!particleIsNotSun) {
-         p.SetCentre(nullptr);
          continue;
       }
 
@@ -178,26 +170,39 @@ void Simulation::DetermineOrbitalCentres() {
       /* Array holding the indices of all possible orbit centres */
       vector<size_t> orbitCentres;
       for (auto f : forces) {
-         if (f.force > 0.5*forces[0].force) {
+         if (f.force > 0.01*forces[0].force) {
             orbitCentres.push_back(f.index);
          }
       }
-      /* If there's more than one option, grab the one with the lowest mass */
+      /* If more than one option, grab the one with the highest angular freq */
       if (orbitCentres.size() > 1) {
-         int minIndex = 0;
-         cnb_float minMass = CNB_FLOAT_MAX;
+         cnb_float biggest = 0;
          for (auto centre : orbitCentres) {
-            if (particles[centre].Mass() < minMass) {
-               minMass  = particles[centre].Mass();
-               minIndex = centre;
+            Particle3 const c = particles[centre];
+            if (p.Mass() > c.Mass()) {
+               continue;
+            }
+            cnb_float const r = (c.Position() - p.Position()).Magnitude();
+            cnb_float const w = CNB_SQRT( c.Mass() / CNB_POW(r,3) );
+            if (w > biggest) {
+               biggest = w;
+               p.SetCentre( &(particles[centre]) );
             }
          }
-         p.SetCentre( &(particles[minIndex]) );
       } else {
          /* Otherwise, just use the particle applying the largest force */
          p.SetCentre( &(particles[orbitCentres[0]]) );
       }
-      tee << padded(p.Name(), LongestParticleName) << " orbits " << p.Centre()->Name() << '\n';
+   }
+}
+
+void Simulation::PrintParticles() const {
+   tee << "Particles:\n";
+   for (size_t i = 0; i < particles.size(); i++) {
+      tee << CNB_INDENT << i+1 << (i+1 < 10 ? " " : "") << '/';
+      tee << particles.size() << ": " << particles[i] << "  ";
+      tee << "Orbits " << particles[i].Centre()->Name() << '\n';
+      tee << flush;
    }
 }
 

@@ -15,6 +15,7 @@ int main() {
    sim.ReadParameters("params/Simulation.param");
    sim.ReadParticlesFromDirectory("eph");
    sim.DetermineOrbitalCentres();
+   sim.PrintParticles();
    sim.OpenTrajectoryFile("traj");
 
    cnb_float t = 0;

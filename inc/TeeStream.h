@@ -12,11 +12,11 @@ namespace cnb {
 
 /* Adapted from http://wordaligned.org/articles/cpp-streambufs */
 template <typename char_type, typename traits = std::char_traits<char_type> >
-class Basic_TeeBuf: public std::basic_streambuf<char_type, traits> {
+class basic_teebuf: public std::basic_streambuf<char_type, traits> {
 public:
    typedef typename traits::int_type int_type;
 
-   Basic_TeeBuf(std::basic_streambuf<char_type, traits> * buf1,
+   basic_teebuf(std::basic_streambuf<char_type, traits> * buf1,
                 std::basic_streambuf<char_type, traits> * buf2)
             : sb1(buf1), sb2(buf2) { }
 
@@ -44,7 +44,7 @@ private:
    std::basic_streambuf<char_type, traits> * sb1;
    std::basic_streambuf<char_type, traits> * sb2;
 };
-typedef Basic_TeeBuf<char> TeeBuf;
+typedef basic_teebuf<char> TeeBuf;
 
 class TeeStream : public std::ostream {
 public:
@@ -60,7 +60,7 @@ private:
    TeeBuf tbuf;
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 /* Allocated in src/TeeStream.cpp */
 extern cnb::TeeStream tee;

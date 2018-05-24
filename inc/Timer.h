@@ -17,6 +17,6 @@ private:
    std::chrono::time_point<clock> prev;
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 #endif

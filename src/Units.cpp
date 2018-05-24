@@ -150,11 +150,10 @@ bool Units::Identify() {
 
 void Units::Print() {
    tee << "Units:\n";
-   string const indent(CNB_INDENT, ' ');
-   tee << indent << "Time:   " << padded(time.name,   4, ALIGN_LEFT) << " = " << time.val << " s\n";
-   tee << indent << "Length: " << padded(length.name, 4, ALIGN_LEFT) << " = " << length.val << " m\n";
-   tee << indent << "Mass:   " << padded(mass.name,   4, ALIGN_LEFT) << " = " << mass.val << " kg\n";
-   tee << indent << "Charge: " << padded(charge.name, 4, ALIGN_LEFT) << " = " << charge.val << " C\n";
+   tee << CNB_INDENT << "Time:   " << padded(time.name,   4, ALIGN_LEFT) << " = " << time.val << " s\n";
+   tee << CNB_INDENT << "Length: " << padded(length.name, 4, ALIGN_LEFT) << " = " << length.val << " m\n";
+   tee << CNB_INDENT << "Mass:   " << padded(mass.name,   4, ALIGN_LEFT) << " = " << mass.val << " kg\n";
+   tee << CNB_INDENT << "Charge: " << padded(charge.name, 4, ALIGN_LEFT) << " = " << charge.val << " C\n";
    tee << flush;
 }
 

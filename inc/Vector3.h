@@ -57,6 +57,6 @@ private:
    cnb_float zz;
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 #endif

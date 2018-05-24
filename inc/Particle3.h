@@ -65,6 +65,6 @@ private:
    size_t RegexMatchCount(boost::sregex_iterator itr);
 };
 
-} // namespace cnb
+} /* namespace cnb */
 
 #endif
