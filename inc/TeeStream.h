@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 
+#include "functions.h"
+
 namespace cnb {
 
 /* Adapted from http://wordaligned.org/articles/cpp-streambufs */
@@ -16,7 +18,7 @@ public:
 
    Basic_TeeBuf(std::basic_streambuf<char_type, traits> * buf1,
                 std::basic_streambuf<char_type, traits> * buf2)
-            : sb1(buf1), sb2(buf2) { std::cout << "teebuf\n"; }
+            : sb1(buf1), sb2(buf2) { }
 
 private:
    virtual int sync() {
@@ -48,16 +50,10 @@ class TeeStream : public std::ostream {
 public:
    TeeStream() : std::ostream(&tbuf),
                  log(GenerateFilename()),
-                 tbuf(std::cout.rdbuf(), log.rdbuf()) { std::cout << "teestream\n"; }
+                 tbuf(std::cout.rdbuf(), log.rdbuf()) { }
 
    std::string GenerateFilename() const {
-      time_t rawtime;
-      struct tm * timeinfo;
-      char buffer[32];
-      time(&rawtime);
-      timeinfo = localtime(&rawtime);
-      strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", timeinfo);
-      return "logs/" + std::string(buffer) + ".log";
+      return "logs/" + timestamp() + ".log";
    }
 private:
    std::ofstream log;

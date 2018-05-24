@@ -8,9 +8,9 @@
 #define CNB_INDENT     5  /* number of spaces */
 
 #ifdef CNB_DEBUG
-# define DEBUG_PRINT(x) tee<<#x<<" = '"<<x<<"'\n";
+# define PRINT(x) tee<<#x<<" = '"<<x<<"'\n";
 #else
-# define DEBUG_PRINT(x)
+# define PRINT(x)
 #endif
 
 #ifdef CNB_FLOAT /* use float */
@@ -36,7 +36,7 @@
 #define DOUBLE_MAX std::numeric_limits<double>::max()
 #define DOUBLE_MIN std::numeric_limits<double>::min()
 
-/* defined in OtherFunctions.cpp */
+/* defined in functions.cpp */
 #define CHECK_RANGE(x,min,max) cnb::check_range_impl(x,min,max,#x);
 
 #endif

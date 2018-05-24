@@ -27,19 +27,20 @@ public:
    void UpdatePositions();
    void UpdateVelocities();
    void UpdateForces();
-   void CalculateInitialForces();
    void DetermineOrbitalCentres();
    void PrintToTrajectoryFile(size_t const timestep);
 
    size_t LongestParticleName = 0;
    Units * units;
    Constants * constants;
-   cnb_float dt;
-   cnb_float t_max;
+
+   cnb_float dt    = -1;
+   cnb_float t_max = -1;
 
 private:
    std::vector<Particle3> particles;
    std::ofstream traj;
+   size_t allowed_particle_count;
 };
 
 } // namespace cnb

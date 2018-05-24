@@ -104,8 +104,14 @@ bool Vector3::Compare(Vector3 const& that) const {
 
 std::string Vector3::ToString() const {
    size_t const bufsize = 64;
+   char const format[] = "%+.6e";
+   size_t const smallbufsize = 16;
+   char x[smallbufsize], y[smallbufsize], z[smallbufsize];
+   snprintf(x, smallbufsize, format, X());
+   snprintf(y, smallbufsize, format, Y());
+   snprintf(z, smallbufsize, format, Z());
    char buf[bufsize];
-   snprintf(buf, bufsize, "%+.2e %+.2e %+.2e", X(), Y(), Z());
+   snprintf(buf, bufsize, "%s %s %s", x, y, z);
    return std::string(buf);
 }
 

@@ -12,6 +12,14 @@ struct UnitEntry {
    cnb_float val    = -1; // in terms of the base SI unit. e.g. fm = 1e-15 m, hr = 3600 s
 };
 
+typedef enum {
+   TIME,
+   LENGTH,
+   MASS,
+   CHARGE,
+   NumUnitTypes
+} UnitType;
+
 class Units {
 public:
    Units(std::string const& filename);
@@ -23,10 +31,10 @@ public:
    UnitEntry mass;
    UnitEntry charge;
 
-   static std::vector<UnitEntry> all_time;
-   static std::vector<UnitEntry> all_length;
-   static std::vector<UnitEntry> all_mass;
-   static std::vector<UnitEntry> all_charge;
+   static cnb_float get(UnitType const& type, std::string const& name);
+
+   typedef std::vector< std::vector<UnitEntry> > AllUnits;
+   static AllUnits all;
 };
 
 } /* namespace cnb */

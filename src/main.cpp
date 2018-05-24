@@ -3,17 +3,17 @@
 #include "Config.h"
 #include "Simulation.h"
 #include "TeeStream.h"
+#include "Timer.h"
 using namespace cnb;
 
 int main() {
+   Timer timer;
    Units units("params/Units.param");
-   Constants constants("params/Constants.param", units);
+   Constants constants("params/Constants.param", &units);
 
    Simulation sim(&units, &constants);
-   sim.ReadParticlesFromDirectory("eph");
    sim.ReadParameters("params/Simulation.param");
-   return 0;
-   sim.CalculateInitialForces();
+   sim.ReadParticlesFromDirectory("eph");
    sim.DetermineOrbitalCentres();
    sim.OpenTrajectoryFile("traj");
 
@@ -22,8 +22,11 @@ int main() {
    for (size_t iTimestep = 0; t < sim.t_max; ++iTimestep) {
       sim.PrintToTrajectoryFile(iTimestep);
       sim.UpdateForces();
+      sim.UpdatePositions();
+      sim.UpdateVelocities();
       t += sim.dt;
    }
 
+   tee << "Total runtime = " << timer.elapsed() << "s\n";
    return EXIT_SUCCESS;
 }

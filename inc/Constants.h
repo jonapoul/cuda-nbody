@@ -3,14 +3,14 @@
 
 #include <vector>
 #include "Config.h"
-#include "Units.h"
 
 namespace cnb {
 
+class Units;
 class Constants {
 public:
    Constants(std::string const& filename,
-             Units const& units);
+             Units * units);
 
    double c;         /* speed of light */
    double e;         /* electron charge */
@@ -25,8 +25,9 @@ public:
 
 private:
    void ReadFromFile(std::string const& filename);
-   void ConvertUnits(Units const& units);
+   void ConvertUnits();
    void Print() const;
+   Units * units;
 };
 
 

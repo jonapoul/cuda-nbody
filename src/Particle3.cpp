@@ -14,13 +14,13 @@ namespace fs = boost::filesystem;
 #include "Particle3.h"
 #include "Simulation.h"
 #include "TeeStream.h"
-#include "OtherFunctions.h"
+#include "functions.h"
 
 using namespace cnb;
 
 Particle3::Particle3(Simulation * s) 
    : position({}), velocity({}), mass(0.0),
-     radius(0.0), name(""), sim(s) { }
+     radius(0.0), name(""), sim(s), centre(nullptr) { }
 
 Particle3::Particle3(Particle3 const& p) {
   this->position = p.position;
@@ -41,6 +41,11 @@ Vector3    Particle3::Velocity() const { return this->velocity; }
 Vector3&   Particle3::Velocity()       { return this->velocity; }
 string     Particle3::Name()     const { return this->name; }
 string&    Particle3::Name()           { return this->name; }
+Particle3* Particle3::Centre()   const { return this->centre; }
+
+void Particle3::SetCentre(Particle3 * centre) {
+   this->centre = centre;
+}
 
 bool Particle3::ReadFromFile(string const& filename) {
    ifstream file(filename);
@@ -225,6 +230,14 @@ string Particle3::ToString() const {
    return ss.str();
 }
 
+Vector3 Particle3::NetForce(Particle3 const& p) const {
+   Vector3 const r          = p.Position() - Position();
+   cnb_float const G        = sim->constants->G;
+   cnb_float const constant = (G * p.Mass() * Mass() / pow(r.Magnitude(), 3));
+   Vector3 net = r * constant;
+   return net;
+}
+
 Particle3& Particle3::operator=(Particle3 const& p) {
    this->position = p.position;
    this->velocity = p.velocity;
@@ -238,14 +251,22 @@ Particle3& Particle3::operator=(Particle3 const& p) {
 namespace cnb {
 
 ostream& operator<<(ostream& os, Particle3 const& p) {
-   os << padded(p.Name(), p.sim->LongestParticleName, ALIGN_LEFT) << ' ';
-   os << "pos=(" << p.Position() << ") ";
-   os << "vel=(" << p.Velocity() << ") ";
-
-   char buf[64];
-   snprintf(buf, 64, "mass=%.2e radius=%.2e", p.Mass(), p.Radius());
-   os << buf;
-   return os;
+   Units const * const u = p.sim->units;
+   string indent(CNB_INDENT, ' ');
+   auto gap = indent.c_str();
+   char buf[512];
+   snprintf(buf, 512,
+            "%sName      = %s\n"
+            "%s Distance = %.2e %s\n"
+            "%s Velocity = %.2e %s/%s\n"
+            "%s Mass     = %.2e %s\n"
+            "%s Radius   = %.2e %s",
+            gap, p.Name().c_str(),
+            gap, p.Position().Magnitude(), u->length.name.c_str(),
+            gap, p.Velocity().Magnitude(), u->length.name.c_str(), u->time.name.c_str(),
+            gap, p.Mass(),                 u->mass.name.c_str(),
+            gap, p.Radius(),               u->length.name.c_str());
+   return os << buf;
 }
 
 } /* namespace cnb */

@@ -31,42 +31,37 @@ size_t Simulation::NumParticles() const {
 }
 
 void Simulation::OpenTrajectoryFile(string const& directory) {
-   time_t rawtime;
-   struct tm * timeinfo;
-   char filename[32];
-   time(&rawtime);
-   timeinfo = localtime(&rawtime);
-   strftime(filename, sizeof(filename), "%Y%m%d_%H%M%S", timeinfo);
-   std::string const filepath = directory + '/' + string(filename) + ".xyz";
+   std::string const filepath = directory + '/' + timestamp() + ".xyz";
    traj.open(filepath);
    if (!traj.is_open()) {
-      terr << "Couldn't open trajectory file '" << filename << "'\n";
+      terr << "Couldn't open trajectory file '" << filepath << "'\n";
       exit(1);
+   } else {
+      tee << "Successfully opened trajectory file '" << filepath << "'\n";
    }
 }
 
 void Simulation::ReadParameters(std::string const& filename) {
+   // char pad_a[PAD_SIZE];
    size_t const NumParams = 3;
-#ifdef CNB_FLOAT
-   DataType type = FLOAT;
-#else
-   DataType type = DOUBLE;
-#endif
    PF_ParameterEntry * Params = new PF_ParameterEntry[NumParams];
    for (size_t i = 0; i < NumParams; i++) {
-      Params[i].Type      = type;
+#ifdef CNB_FLOAT
+      Params[i].Type      = FLOAT;
+#else
+      Params[i].Type      = DOUBLE;
+#endif
       Params[i].IsBoolean = 0;
       Params[i].IsArray   = 0;
    }
 
-   char ParticlesToKeep_str[MAX_PARAMETER_NAME_LENGTH];
-
+   char count[MAX_LINE_LENGTH];
    strncpy(Params[0].Parameter, "Timestep",  MAX_PARAMETER_NAME_LENGTH);
    strncpy(Params[1].Parameter, "EndTime",   MAX_PARAMETER_NAME_LENGTH);
    strncpy(Params[2].Parameter, "Particles", MAX_PARAMETER_NAME_LENGTH);
    Params[0].Pointer = &dt;
    Params[1].Pointer = &t_max;
-   Params[2].Pointer = &ParticlesToKeep_str;
+   Params[2].Pointer = &count;
    Params[2].Type = STRING;
 
    /* Open file for reading */
@@ -86,19 +81,22 @@ void Simulation::ReadParameters(std::string const& filename) {
    delete[] Params;
    fclose(File);
 
-   tee << "Timestep  = " << dt << '\n';
-   tee << "EndTime   = " << t_max << '\n';
+   /* Rescale units */
+   dt    *= (Units::get(TIME, "day") / units->time.val);
+   t_max *= (Units::get(TIME, "day") / units->time.val);
 
-   if (string(ParticlesToKeep_str) != "All") {
-      int const ParticlesToKeep = stoi(ParticlesToKeep_str);
-      tee << "Particles = " << ParticlesToKeep << '\n';
-      for (size_t i = ParticlesToKeep; i < particles.size(); ++i) {
-         particles.erase(particles.begin() + i);
-      }
+   /* Print results */
+   string const indent(CNB_INDENT, ' ');
+   tee << "Parameters:\n";
+   tee << indent << "Timestep  = " << dt << " " << units->time.name << '\n';
+   tee << indent << "EndTime   = " << t_max << " " << units->time.name << '\n';
+   if (string(count) != "All") {
+      allowed_particle_count = stoi(count);
+      tee << indent << "Particles = " << allowed_particle_count << '\n';
    } else {
-      tee << "Particles = All\n";
+      tee << indent << "Particles = All\n";
    }
-
+   tee << flush;
 }
 
 void Simulation::ReadParticlesFromDirectory(string const& directory) {
@@ -113,7 +111,7 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       string const path_string = file.path().string();
       if ( p.ReadFromFile(path_string) ) {
          LongestParticleName = MAX( p.Name().length(), LongestParticleName );
-         this->particles.push_back(p);
+         particles.push_back(p);
       } else {
          terr << "Failed reading '" << path_string << "'\n";
          exit(1);
@@ -124,10 +122,14 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       return p1.Mass() > p2.Mass();
    };
    sort(particles.begin(), particles.end(), SortParticles);
-   string const indent(CNB_INDENT, ' ');
+   if (allowed_particle_count > 0) {
+      particles = vector<Particle3>(particles.begin(),
+                                    particles.begin()+allowed_particle_count);
+   }
    tee << "Particles:\n";
-   for (auto& p : particles) {
-      tee << indent << p << '\n';
+   for (size_t i = 0; i < particles.size(); i++) {
+      tee << i+1 << '/' << particles.size() << '\n';
+      tee << particles[i] << '\n';
    }
    tee << flush;
 }
@@ -144,12 +146,59 @@ void Simulation::UpdateForces() {
    int x;
 }
 
-void Simulation::CalculateInitialForces() {
-   int x;
-}
-
 void Simulation::DetermineOrbitalCentres() {
-   int x;
+   struct Forces {
+      cnb_float force;
+      int index;
+   };
+
+   for (auto& p : particles) {
+      /* Check if particle is abnormally massive */
+      bool particleIsNotSun = false;
+      vector<Forces> forces(NumParticles());
+      for (size_t i = 0; i < NumParticles(); ++i) {
+         if (!p.Compare(particles[i])) {
+            if (p.Mass() < 1000*particles[i].Mass()) {
+               particleIsNotSun = true;
+            }
+            forces[i].force = p.NetForce(particles[i]).Magnitude();
+            forces[i].index = i;
+         }
+      }
+      /* No orbit centre if so */
+      if (!particleIsNotSun) {
+         p.SetCentre(nullptr);
+         continue;
+      }
+
+      /* Sort in order of force magnitude */
+      auto sorting = [](Forces& f1, Forces& f2) { return f1.force > f2.force; };
+      sort(forces.begin(), forces.end(), sorting);
+
+      /* Array holding the indices of all possible orbit centres */
+      vector<size_t> orbitCentres;
+      for (auto f : forces) {
+         if (f.force > 0.5*forces[0].force) {
+            orbitCentres.push_back(f.index);
+         }
+      }
+      /* If there's more than one option, grab the one with the lowest mass */
+      if (orbitCentres.size() > 1) {
+         int minIndex = 0;
+         cnb_float minMass = CNB_FLOAT_MAX;
+         for (auto centre : orbitCentres) {
+            if (particles[centre].Mass() < minMass) {
+               minMass  = particles[centre].Mass();
+               minIndex = centre;
+            }
+         }
+         p.SetCentre( &(particles[minIndex]) );
+      } else {
+         /* Otherwise, just use the particle applying the largest force */
+         p.SetCentre( &(particles[orbitCentres[0]]) );
+      }
+      tee << padded(p.Name(), LongestParticleName) << " orbits " << p.Centre()->Name() << '\n';
+   }
 }
 
 void Simulation::PrintToTrajectoryFile(size_t const timestep) {

@@ -1,8 +1,9 @@
+#include <ctime>
 #include <string>
 using namespace std;
 
 #include "Config.h"
-#include "OtherFunctions.h"
+#include "functions.h"
 #include "TeeStream.h"
 
 namespace cnb {
@@ -47,6 +48,16 @@ string padded(string const& input,
    terr << "Unknown text alignment\n";
    exit(1);
    return "";
+}
+
+string timestamp() {
+   time_t rawtime;
+   struct tm * timeinfo;
+   char buffer[32];
+   time(&rawtime);
+   timeinfo = localtime(&rawtime);
+   strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", timeinfo);
+   return string(buffer);
 }
 
 }

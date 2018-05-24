@@ -7,52 +7,54 @@ using namespace std;
 #include "Units.h"
 #include "Config.h"
 #include "TeeStream.h"
-#include "OtherFunctions.h"
+#include "functions.h"
 using namespace cnb;
 
 extern "C" {
 #include "PF.h"
 }
 
-vector<UnitEntry> Units::all_time = {
-   { "fs",  1e-15 },
-   { "ns",  1e-9 },
-   { "s",   1 },
-   { "min", 60 },
-   { "hr",  3600 },
-   { "day", 86400 },
-   { "wk",  604800 },
-   { "yr",  3.1556926e7 },
-   { "kyr", 3.1556926e10 },
-   { "Myr", 3.1556926e13 }
-};
-vector<UnitEntry> Units::all_length = {
-   { "fm",  1e-15 },
-   { "nm",  1e-9 },
-   { "m",   1 },
-   { "km",  1e3 },
-   { "R_E", 6.371e6 },
-   { "AU",  1.495e11 },
-   { "ly",  9.46052e15 },
-   { "pc",  3.08567758e16 },
-   { "kpc", 3.08567758e19 },
-   { "Mpc", 3.08567758e22 }
-};
-vector<UnitEntry> Units::all_mass = {
-   { "m_e", 9.10938356e-31 },
-   { "m_p", 1.6726219e-27 },
-   { "fg",  1e-18 },
-   { "ng",  1e-12 },
-   { "g",   1e-3 },
-   { "kg",  1 },
-   { "ton", 1e3 },
-   { "M_M", 7.34767309e22 },
-   { "M_E", 5.97219e24 },
-   { "M_S", 1.9891e30 }
-};
-vector<UnitEntry> Units::all_charge = {
-   { "e", 1.60217662e-19 },
-   { "C", 1 }
+Units::AllUnits Units::all {
+   { /* time */
+      { "fs",  1e-15 },
+      { "ns",  1e-9 },
+      { "s",   1 },
+      { "min", 60 },
+      { "hr",  3600 },
+      { "day", 86400 },
+      { "wk",  604800 },
+      { "yr",  3.1556926e7 },
+      { "kyr", 3.1556926e10 },
+      { "Myr", 3.1556926e13 }
+   },
+   { /* length */
+      { "fm",  1e-15 },
+      { "nm",  1e-9 },
+      { "m",   1 },
+      { "km",  1e3 },
+      { "R_E", 6.371e6 },
+      { "AU",  1.495e11 },
+      { "ly",  9.46052e15 },
+      { "pc",  3.08567758e16 },
+      { "kpc", 3.08567758e19 },
+      { "Mpc", 3.08567758e22 }
+   },
+   { /* mass */
+      { "m_e", 9.10938356e-31 },
+      { "m_p", 1.6726219e-27 },
+      { "fg",  1e-18 },
+      { "ng",  1e-12 },
+      { "g",   1e-3 },
+      { "kg",  1 },
+      { "ton", 1e3 },
+      { "M_M", 7.34767309e22 },
+      { "M_E", 5.97219e24 },
+      { "M_S", 1.9891e30 }
+   },
+   { /* charge */
+      { "e", 1.60217662e-19 },
+      { "C", 1 }
+   }
 };
 
 Units::Units(string const& filename) {
@@ -119,25 +121,25 @@ Units::Units(string const& filename) {
 
 /* Match up each of the read-in units to the static arrays of possible units */
 bool Units::Identify() {
-   for (auto t : all_time) {
+   for (auto t : all[TIME]) {
       if (time.name == t.name) {
          time.val = t.val;
          break;
       }
    }
-   for (auto l : all_length) {
+   for (auto l : all[LENGTH]) {
       if (length.name == l.name) {
          length.val = l.val;
          break;
       }
    }
-   for (auto m : all_mass) {
+   for (auto m : all[MASS]) {
       if (mass.name == m.name) {
          mass.val = m.val;
          break;
       }
    }
-   for (auto c : all_charge) {
+   for (auto c : all[CHARGE]) {
       if (charge.name == c.name) {
          charge.val = c.val;
          break;
@@ -154,4 +156,16 @@ void Units::Print() {
    tee << indent << "Mass:   " << padded(mass.name,   4, ALIGN_LEFT) << " = " << mass.val << " kg\n";
    tee << indent << "Charge: " << padded(charge.name, 4, ALIGN_LEFT) << " = " << charge.val << " C\n";
    tee << flush;
+}
+
+cnb_float Units::get(UnitType const& type,
+                     string const& name) {
+   for (const auto& u : all[type]) {
+      if (u.name == name) {
+         return u.val;
+      }
+   }
+   terr << "No unit recognised with the name '" << name << "'\n";
+   exit(1);
+   return all[type][0].val; /* just to remove compiler errors */
 }

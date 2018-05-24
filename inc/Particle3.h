@@ -15,7 +15,7 @@ namespace cnb {
 class Simulation;
 class Particle3 {
 public:
-   Particle3(Simulation * s);
+   Particle3(Simulation * s = nullptr);
    Particle3(Particle3 const& p);
    Particle3& operator=(Particle3 const& p);
 
@@ -31,9 +31,12 @@ public:
    Vector3&     Velocity();
    std::string  Name() const;
    std::string& Name();
+   Particle3 *  Centre() const;
+   void         SetCentre(Particle3 * centre);
 
    bool        Compare(Particle3 const&) const;
    std::string ToString() const;
+   Vector3     NetForce(Particle3 const& p) const;
 
    void      LeapPosition(cnb_float const, Vector3 const&);
    void      LeapVelocity(cnb_float const, Vector3 const&);
@@ -51,6 +54,7 @@ private:
    cnb_float radius; /* km */
    std::string name;
    Simulation * sim;
+   Particle3 * centre; /* particle around which this is orbiting */
 
    bool ReadName(std::string const& file_contents);
    bool ReadRadius(std::string const& file_contents);

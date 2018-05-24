@@ -1,5 +1,3 @@
-#include "Config.h"
-
 #include <sys/stat.h>
 #include <math.h>
 #include <cstring>
@@ -7,9 +5,10 @@
 using namespace std;
 
 #include "Constants.h"
+#include "Config.h"
 #include "TeeStream.h"
 #include "Units.h"
-#include "OtherFunctions.h"
+#include "functions.h"
 using namespace cnb;
 
 extern "C" {
@@ -17,7 +16,8 @@ extern "C" {
 }
 
 Constants::Constants(string const& filename,
-                     Units const& units) {
+                     Units * u)
+         : units(u) {
    /* check if the File exists */
    struct stat buffer;   
    if (stat(filename.c_str(), &buffer) != 0) {
@@ -26,23 +26,27 @@ Constants::Constants(string const& filename,
    }
    /* do the deed */
    ReadFromFile(filename);
-   ConvertUnits(units);
+   ConvertUnits();
    Print();
 }
 
 void Constants::Print() const {
    tee << "Constants:\n";
+   string const t = units->time.name;
+   string const l = units->length.name;
+   string const m = units->mass.name;
+   string const q = units->charge.name;
    string const indent(CNB_INDENT, ' ');
-   tee << indent << "c    = " << c << '\n';
-   tee << indent << "e    = " << e << '\n';
-   tee << indent << "G    = " << G << '\n';
-   tee << indent << "h    = " << h << '\n';
-   tee << indent << "hbar = " << hbar << '\n';
-   tee << indent << "k_b  = " << k_b << '\n';
-   tee << indent << "m_e  = " << m_e << '\n';
-   tee << indent << "m_p  = " << m_p << '\n';
-   tee << indent << "\u03B5_0  = " << epsilon_0 << '\n';
-   tee << indent << "\u03BC_0  = " << mu_0 << '\n';
+   tee << indent << "c    = " << c << ' '<< l << ' ' << t << "^-1\n";
+   tee << indent << "e    = " << e << ' '<< q << '\n';
+   tee << indent << "G    = " << G << ' ' << l << "^3 " << t << "^-2 " << m << "^-1\n";
+   tee << indent << "h    = " << h << ' ' << l << "^2 " << m << " " << t << "^-1\n";
+   tee << indent << "hbar = " << hbar << ' ' << l << "^2 " << m << " " << t << "^-1\n";
+   tee << indent << "k_b  = " << k_b << ' ' << l << "^2 " << m << " " << t << "^-2\n";
+   tee << indent << "m_e  = " << m_e << ' ' << m << '\n';
+   tee << indent << "m_p  = " << m_p << ' ' << m << '\n';
+   tee << indent << "\u03B5_0  = " << epsilon_0 << ' ' << q << "^2 " << t << "^2 " << m << "^-1 " << l << "^3\n";
+   tee << indent << "\u03BC_0  = " << mu_0 << ' ' << m << ' ' << l << ' ' << q << "^-2\n"; 
    tee << flush;
 }
 
@@ -94,11 +98,11 @@ void Constants::ReadFromFile(std::string const& filename) {
    fclose(File);
 }
 
-void Constants::ConvertUnits(Units const& units) {
-   double const t = units.time.val;
-   double const m = units.mass.val;
-   double const l = units.length.val;
-   double const q = units.charge.val;
+void Constants::ConvertUnits() {
+   double const t = units->time.val;
+   double const m = units->mass.val;
+   double const l = units->length.val;
+   double const q = units->charge.val;
    c         *= ( t / l );
    e         *= ( q );
    G         *= ( m*t*t / (l*l*l) );
