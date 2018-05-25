@@ -1,4 +1,5 @@
 
 Timestep    0.001    # days
-EndTime     5000    # days
+EndTime     5000     # days
 Particles   All
+PrintingGap 30       # iterations

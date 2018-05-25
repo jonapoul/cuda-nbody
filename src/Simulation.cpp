@@ -46,7 +46,7 @@ void Simulation::OpenTrajectoryFile(string const& directory) {
 
 void Simulation::ReadParameters(std::string const& filename) {
    // char pad_a[PAD_SIZE];
-   size_t const NumParams = 3;
+   size_t const NumParams = 4;
    PF_ParameterEntry * Params = new PF_ParameterEntry[NumParams];
    for (size_t i = 0; i < NumParams; i++) {
 #ifdef CNB_FLOAT
@@ -59,13 +59,14 @@ void Simulation::ReadParameters(std::string const& filename) {
    }
 
    char count[MAX_LINE_LENGTH];
-   strncpy(Params[0].Parameter, "Timestep",  MAX_PARAMETER_NAME_LENGTH);
-   strncpy(Params[1].Parameter, "EndTime",   MAX_PARAMETER_NAME_LENGTH);
-   strncpy(Params[2].Parameter, "Particles", MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[0].Parameter, "Timestep",    MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[1].Parameter, "EndTime",     MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[2].Parameter, "Particles",   MAX_PARAMETER_NAME_LENGTH);
+   strncpy(Params[3].Parameter, "PrintingGap", MAX_PARAMETER_NAME_LENGTH);
    Params[0].Pointer = &dt;
    Params[1].Pointer = &t_max;
-   Params[2].Pointer = &count;
-   Params[2].Type = STRING;
+   Params[2].Pointer = &count;         Params[2].Type = STRING;
+   Params[3].Pointer = &printingGap;   Params[3].Type = INTEGER;
 
    /* Open file for reading */
    FILE * File;
@@ -90,14 +91,15 @@ void Simulation::ReadParameters(std::string const& filename) {
 
    /* Print results */
    tee << "Parameters:\n";
-   tee << CNB_INDENT << "Timestep  = " << dt << " " << units->time.name << '\n';
-   tee << CNB_INDENT << "EndTime   = " << t_max << " " << units->time.name << '\n';
+   tee << CNB_INDENT << "Timestep    = " << dt << " " << units->time.name << '\n';
+   tee << CNB_INDENT << "EndTime     = " << t_max << " " << units->time.name << '\n';
+   tee << CNB_INDENT << "PrintingGap = " << printingGap << '\n';
    if (string(count) != "All") {
       allowedParticleCount = stoi(count);
-      tee << CNB_INDENT << "Particles = " << allowedParticleCount << '\n';
+      tee << CNB_INDENT << "Particles   = " << allowedParticleCount << '\n';
    } else {
       allowedParticleCount = 0;
-      tee << CNB_INDENT << "Particles = All\n";
+      tee << CNB_INDENT << "Particles   = All\n";
    }
    tee << flush;
 }

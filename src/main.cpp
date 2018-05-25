@@ -23,14 +23,14 @@ int main() {
    tee << "Number of iterations = " << (sim.t_max / sim.dt) << '\n';
 
    for (size_t iteration = 0; t <= sim.t_max; ++iteration) {
-      if (iteration % 10 == 0) {
-         sim.PrintToTrajectoryFile(iteration/10);
+      if (iteration % sim.printingGap == 0) {
+         sim.PrintToTrajectoryFile(iteration/sim.printingGap);
       }
 
       sim.Update();
       t += sim.dt;
 
-      if (iteration % 20 == 0) {
+      if (iteration % sim.printingGap == 0) {
          cnb_float const walltime = timer.elapsed();
          cnb_float const timeLeft = walltime * (sim.t_max / t) - walltime;
          printf("%.2f%% done, %s left    \r",

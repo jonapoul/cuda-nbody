@@ -35,6 +35,7 @@ public:
 
    cnb_float dt    = -1;
    cnb_float t_max = -1;
+   int printingGap = 1;
 
 private:
    std::vector<Particle3> particles;
