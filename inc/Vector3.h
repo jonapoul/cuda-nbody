@@ -8,9 +8,11 @@ namespace cnb {
 
 class Vector3 {
 public:
-   Vector3(cnb_float const XX = 0.0,
-           cnb_float const YY = 0.0,
-           cnb_float const ZZ = 0.0);
+   Vector3();
+   Vector3(cnb_float const element);
+   Vector3(cnb_float const XX,
+           cnb_float const YY,
+           cnb_float const ZZ);
    Vector3(Vector3 const&);
    Vector3& operator=(Vector3 const&);
 
@@ -23,15 +25,15 @@ public:
 
    bool        Compare(Vector3 const&) const;
    Vector3     Cross(Vector3 const&) const;
-   Vector3     operator*(cnb_float const) const;
    Vector3     operator/(cnb_float const) const;
-   Vector3     operator+(cnb_float const) const;
-   Vector3     operator-(cnb_float const) const;
    Vector3     operator+(Vector3 const&) const;
    Vector3     operator-(Vector3 const&) const;
    Vector3&    operator+=(const Vector3&);
    Vector3&    operator-=(const Vector3&);
    Vector3     operator-() const;
+
+   friend Vector3 operator*(Vector3 const&, cnb_float const);
+   friend Vector3 operator*(cnb_float const, Vector3 const&);
 
    template<typename T> Vector3& operator*=(const T& val) {
       this->X() *= val;

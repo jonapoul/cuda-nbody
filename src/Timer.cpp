@@ -14,8 +14,7 @@ void Timer::reset() {
    prev  = clock::now();
 }
 
-double Timer::elapsed() {
-   double dt = duration_cast<milliseconds>(clock::now() - prev).count() / 1e3;
-   prev = clock::now();
+cnb_float Timer::elapsed() {
+   cnb_float dt = duration_cast<microseconds>(clock::now() - prev).count() / 1e6;
    return dt;
 }

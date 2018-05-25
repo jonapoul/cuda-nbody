@@ -2,6 +2,7 @@
 #define CUDANBODY_TIMER_H
 
 #include <chrono>
+#include "Config.h"
 
 namespace cnb {
 
@@ -9,7 +10,7 @@ class Timer {
 public:
    Timer();
    void reset();
-   double elapsed();
+   cnb_float elapsed();
 
 private:
    typedef std::chrono::high_resolution_clock clock;

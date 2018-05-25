@@ -6,15 +6,15 @@
 
 #include "Config.h"
 #include "Particle3.h"
-#include "Constants.h"
-#include "Units.h"
 
 namespace cnb {
 
+class Units;
+class Constants;
+class Integrator;
 class Simulation {
 public:
-   Simulation(Units * u,
-              Constants * c);
+   Simulation();
    Simulation(Simulation const& s) = delete;
    Simulation& operator=(Simulation const& s) = delete;
    ~Simulation();
@@ -24,12 +24,10 @@ public:
 
    void ReadParameters(std::string const& filename);
    void ReadParticlesFromDirectory(std::string const& directory);
-   void UpdatePositions();
-   void UpdateVelocities();
-   void UpdateForces();
    void DetermineOrbitalCentres();
    void PrintParticles() const;
-   void PrintToTrajectoryFile(size_t const timestep);
+   void PrintToTrajectoryFile(size_t const iteration);
+   void Update();
 
    size_t LongestParticleName = 0;
    Units * units;
@@ -41,7 +39,8 @@ public:
 private:
    std::vector<Particle3> particles;
    std::ofstream traj;
-   size_t allowed_particle_count;
+   size_t allowedParticleCount;
+   Integrator * integrator;
 };
 
 } /* namespace cnb */

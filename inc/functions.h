@@ -20,6 +20,8 @@ std::string padded(std::string const& input,
 
 std::string timestamp();
 
+std::string secsToString(cnb_float const secs);
+
 } /* namespace cnb */
 
 #endif

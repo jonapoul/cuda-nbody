@@ -8,26 +8,36 @@ using namespace cnb;
 
 int main() {
    Timer timer;
-   Units units("params/Units.param");
-   Constants constants("params/Constants.param", &units);
 
-   Simulation sim(&units, &constants);
+   Simulation sim;
    sim.ReadParameters("params/Simulation.param");
    sim.ReadParticlesFromDirectory("eph");
    sim.DetermineOrbitalCentres();
    sim.PrintParticles();
    sim.OpenTrajectoryFile("traj");
+   
+   tee << "Setup time = " << timer.elapsed() << " s\n";
+   timer.reset();
 
    cnb_float t = 0;
+   tee << "Number of iterations = " << (sim.t_max / sim.dt) << '\n';
 
-   for (size_t iTimestep = 0; t < sim.t_max; ++iTimestep) {
-      sim.PrintToTrajectoryFile(iTimestep);
-      sim.UpdateForces();
-      sim.UpdatePositions();
-      sim.UpdateVelocities();
+   for (size_t iteration = 0; t <= sim.t_max; ++iteration) {
+      if (iteration % 10 == 0) {
+         sim.PrintToTrajectoryFile(iteration/10);
+      }
+
+      sim.Update();
       t += sim.dt;
+
+      if (iteration % 20 == 0) {
+         cnb_float const walltime = timer.elapsed();
+         cnb_float const timeLeft = walltime * (sim.t_max / t) - walltime;
+         printf("%.2f%% done, %s left    \r",
+                100.0*t/sim.t_max, secsToString(timeLeft).c_str());
+      }
    }
 
-   tee << "Total runtime = " << timer.elapsed() << "s\n";
+   tee << "\nTotal runtime = " << timer.elapsed() << " s   \n";
    return EXIT_SUCCESS;
 }

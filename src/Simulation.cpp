@@ -9,20 +9,23 @@ namespace fs = boost::filesystem;
 #include "TeeStream.h"
 #include "Constants.h"
 #include "Units.h"
+#include "Integrator.h"
 using namespace cnb;
 
 extern "C" {
 #include "PF.h"
 }
 
-Simulation::Simulation(Units * u,
-                       Constants * c) 
-      : units(u), constants(c) {
-   /* blank */
+Simulation::Simulation() : integrator(nullptr) {
+   units      = new Units("params/Units.param");
+   constants  = new Constants("params/Constants.param", units);
 }
 
 Simulation::~Simulation() {
    traj.close();
+   delete units;
+   delete constants;
+   delete integrator;
    tee << flush;
 }
 
@@ -90,9 +93,10 @@ void Simulation::ReadParameters(std::string const& filename) {
    tee << CNB_INDENT << "Timestep  = " << dt << " " << units->time.name << '\n';
    tee << CNB_INDENT << "EndTime   = " << t_max << " " << units->time.name << '\n';
    if (string(count) != "All") {
-      allowed_particle_count = stoi(count);
-      tee << CNB_INDENT << "Particles = " << allowed_particle_count << '\n';
+      allowedParticleCount = stoi(count);
+      tee << CNB_INDENT << "Particles = " << allowedParticleCount << '\n';
    } else {
+      allowedParticleCount = 0;
       tee << CNB_INDENT << "Particles = All\n";
    }
    tee << flush;
@@ -121,22 +125,13 @@ void Simulation::ReadParticlesFromDirectory(string const& directory) {
       return p1.Mass() > p2.Mass();
    };
    sort(particles.begin(), particles.end(), SortParticles);
-   if (allowed_particle_count > 0) {
+   if (allowedParticleCount > 0) {
       particles = vector<Particle3>(particles.begin(),
-                                    particles.begin()+allowed_particle_count);
+                                    particles.begin()+allowedParticleCount);
    }
-}
 
-void Simulation::UpdatePositions() {
-   int x;
-}
-
-void Simulation::UpdateVelocities() {
-   int x;
-}
-
-void Simulation::UpdateForces() {
-   int x;
+   integrator = new Integrator(&particles, constants);
+   integrator->CalculateForces();
 }
 
 void Simulation::DetermineOrbitalCentres() {
@@ -145,21 +140,23 @@ void Simulation::DetermineOrbitalCentres() {
       int index;
    };
 
-   for (auto& p : particles) {
+   for (size_t i = 0; i < particles.size(); ++i) {
+      Particle3 * p = &(particles[i]);
       /* Check if particle is abnormally massive */
       bool particleIsNotSun = false;
       vector<Forces> forces(NumParticles());
-      for (size_t i = 0; i < NumParticles(); ++i) {
-         if (!p.Compare(particles[i])) {
-            if (p.Mass() < 1000*particles[i].Mass()) {
+      for (size_t j = 0; j < NumParticles(); ++j) {
+         if (!p->Compare(particles[j])) {
+            if (p->Mass() < 1000*particles[j].Mass()) {
                particleIsNotSun = true;
             }
-            forces[i].force = p.NetForce(particles[i]).Magnitude();
-            forces[i].index = i;
+            forces[j].force = p->NetForce(particles[j]).Magnitude();
+            forces[j].index = j;
          }
       }
       /* No orbit centre if so */
       if (!particleIsNotSun) {
+         p->SetCentre(p);
          continue;
       }
 
@@ -179,19 +176,19 @@ void Simulation::DetermineOrbitalCentres() {
          cnb_float biggest = 0;
          for (auto centre : orbitCentres) {
             Particle3 const c = particles[centre];
-            if (p.Mass() > c.Mass()) {
+            if (p->Mass() > c.Mass()) {
                continue;
             }
-            cnb_float const r = (c.Position() - p.Position()).Magnitude();
+            cnb_float const r = (c.Position() - p->Position()).Magnitude();
             cnb_float const w = CNB_SQRT( c.Mass() / CNB_POW(r,3) );
             if (w > biggest) {
                biggest = w;
-               p.SetCentre( &(particles[centre]) );
+               p->SetCentre( &(particles[centre]) );
             }
          }
       } else {
          /* Otherwise, just use the particle applying the largest force */
-         p.SetCentre( &(particles[orbitCentres[0]]) );
+         p->SetCentre( &(particles[orbitCentres[0]]) );
       }
    }
 }
@@ -199,16 +196,17 @@ void Simulation::DetermineOrbitalCentres() {
 void Simulation::PrintParticles() const {
    tee << "Particles:\n";
    for (size_t i = 0; i < particles.size(); i++) {
+      Particle3 const * const p = &(particles[i]);
       tee << CNB_INDENT << i+1 << (i+1 < 10 ? " " : "") << '/';
-      tee << particles.size() << ": " << particles[i] << "  ";
-      tee << "Orbits " << particles[i].Centre()->Name() << '\n';
-      tee << flush;
+      tee << particles.size() << ": " << *p << "  ";
+      tee << "Orbits " << p->Centre()->Name();
+      tee << endl;
    }
 }
 
-void Simulation::PrintToTrajectoryFile(size_t const timestep) {
+void Simulation::PrintToTrajectoryFile(size_t const iteration) {
    traj << NumParticles() << '\n';
-   traj << "Point = " << timestep << '\n';
+   traj << "Point = " << iteration << '\n';
    for (const auto& p : particles) {
       traj << p.Name() << ' ';
       if (p.Name().length() < LongestParticleName) {
@@ -216,4 +214,11 @@ void Simulation::PrintToTrajectoryFile(size_t const timestep) {
       }
       traj << p.Position() << '\n';
    }
+}
+
+void Simulation::Update() {
+   integrator->ResetForces();
+   integrator->UpdatePositions(dt);
+   integrator->CalculateForces();
+   integrator->UpdateVelocities(dt);
 }

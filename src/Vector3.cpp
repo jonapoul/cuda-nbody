@@ -5,6 +5,12 @@
 #include "Vector3.h"
 using namespace cnb;
 
+Vector3::Vector3()
+      : xx(0), yy(0), zz(0) { }
+
+Vector3::Vector3(cnb_float const element)
+      : xx(element), yy(element), zz(element) { }
+
 Vector3::Vector3(cnb_float const XX,
                  cnb_float const YY,
                  cnb_float const ZZ)
@@ -40,24 +46,8 @@ Vector3 Vector3::Cross(Vector3 const& that) const {
                    this->X()*that.Y() - this->Y()*that.X() );
 }
 
-Vector3 Vector3::operator*(cnb_float const factor) const {
-   return Vector3( this->X() * factor,
-                   this->Y() * factor,
-                   this->Z() * factor);
-}
-
 Vector3 Vector3::operator/(cnb_float const factor) const {
    return *this * (1.0 / factor);
-}
-
-Vector3 Vector3::operator+(cnb_float const value) const {
-   return Vector3( this->X() + value,
-                   this->Y() + value,
-                   this->Z() + value);
-}
-
-Vector3 Vector3::operator-(cnb_float const value) const {
-   return *this + (-value);
 }
 
 Vector3 Vector3::operator+(Vector3 const& that) const {
@@ -121,4 +111,17 @@ std::ostream& operator<<(std::ostream& os,
                          Vector3 const& v) {
    return os << v.ToString();
 }
+
+Vector3 operator*(Vector3 const& v, cnb_float const f) {
+   return Vector3(v.X() * f,
+                  v.Y() * f,
+                  v.Z() * f);
 }
+
+Vector3 operator*(cnb_float const f, Vector3 const& v) {
+   return Vector3(v.X() * f,
+                  v.Y() * f,
+                  v.Z() * f);
+}
+
+} /* namespace cnb */

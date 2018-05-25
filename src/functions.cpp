@@ -60,4 +60,14 @@ string timestamp() {
    return string(buffer);
 }
 
+string secsToString(cnb_float const secs) {
+   char buf[32];
+   int const hr  = secs / 3600;
+   int const min = int(secs / 60) % 60;
+   cnb_float sec = secs;
+   while (sec > 60) sec -= 60;
+   snprintf(buf, 32, "%02dh %02dm %02.0fs", hr, min, sec);
+   return buf;
+}
+
 }

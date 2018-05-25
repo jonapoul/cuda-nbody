@@ -1,4 +1,4 @@
 
-Timestep     1    # days
-EndTime    100    # days
+Timestep    0.001    # days
+EndTime     5000    # days
 Particles   All

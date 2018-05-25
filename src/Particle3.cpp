@@ -14,8 +14,9 @@ namespace fs = boost::filesystem;
 #include "Particle3.h"
 #include "Simulation.h"
 #include "TeeStream.h"
+#include "Units.h"
+#include "Constants.h"
 #include "functions.h"
-
 using namespace cnb;
 
 Particle3::Particle3(Simulation * s) 
@@ -231,11 +232,9 @@ string Particle3::ToString() const {
 }
 
 Vector3 Particle3::NetForce(Particle3 const& p) const {
-   Vector3 const r          = p.Position() - Position();
-   cnb_float const G        = sim->constants->G;
-   cnb_float const constant = (G * p.Mass() * Mass() / pow(r.Magnitude(), 3));
-   Vector3 net = r * constant;
-   return net;
+   Vector3 const r = p.Position() - Position();
+   cnb_float const G = sim->constants->G;
+   return (G * p.Mass() * Mass() / pow(r.Magnitude(), 3)) * r;
 }
 
 Particle3& Particle3::operator=(Particle3 const& p) {
